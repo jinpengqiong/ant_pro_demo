@@ -8,7 +8,6 @@ import { getTimeDistance } from './utils/utils';
 import styles from './style.less';
 
 const { RangePicker } = DatePicker;
-const { TabPane } = Tabs;
 
 const IntroduceRow = React.lazy(() => import('./components/IntroduceRow'));
 const SalesCard = React.lazy(() => import('./components/SalesCard'));
@@ -132,7 +131,7 @@ class Analysis extends Component {
   render() {
     const { rangePickerValue, salesType, currentTabKey } = this.state;
     const { dashboardAnalysis, loading } = this.props;
-    const { timeType } = this.state;
+    const { timeType, totalData } = this.state;
     const {
       visitData,
       visitData2,
@@ -196,7 +195,7 @@ class Analysis extends Component {
           <br/>
           </Suspense>
           <Suspense fallback={<PageLoading />}>
-            <IntroduceRow loading={loading} visitData={visitData} />
+            <IntroduceRow loading={loading} visitData={totalData} />
           </Suspense>
           <Suspense fallback={null}>
             <SalesCard

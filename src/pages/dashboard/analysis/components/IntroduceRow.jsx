@@ -23,12 +23,7 @@ const IntroduceRow = ({ loading, visitData }) => (
     <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
-        title={
-          <FormattedMessage
-            id="dashboard-analysis.analysis.total-sales"
-            defaultMessage="Total Sales"
-          />
-        }
+        title={visitData ? visitData.storage.title : ''}
         action={
           <Tooltip
             title={
@@ -42,37 +37,17 @@ const IntroduceRow = ({ loading, visitData }) => (
           </Tooltip>
         }
         loading={loading}
-        total={() => <Yuan>126560</Yuan>}
+        total={visitData ? visitData.storage.total : ''}
         footer={
-          <Field
-            label={
-              <FormattedMessage
-                id="dashboard-analysis.analysis.day-sales"
-                defaultMessage="Daily Sales"
-              />
-            }
-            value={`￥${numeral(12423).format('0,0')}`}
-          />
+          <Field label={visitData && visitData.storage.subTitle} value={visitData && visitData.storage.subTotal} />
         }
         contentHeight={46}
       >
-        <Trend
-          flag="up"
-          style={{
-            marginRight: 16,
-          }}
-        >
-          <FormattedMessage id="dashboard-analysis.analysis.week" defaultMessage="Weekly Changes" />
-          <span className={styles.trendText}>12%</span>
-        </Trend>
-        <Trend flag="down">
-          <FormattedMessage id="dashboard-analysis.analysis.day" defaultMessage="Daily Changes" />
-          <span className={styles.trendText}>11%</span>
-        </Trend>
+        <MiniBar height={46} data={visitData && visitData.storage.data} />
       </ChartCard>
     </Col>
 
-    <Col {...topColResponsiveProps}>
+    {/* <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
         loading={loading}
@@ -142,8 +117,8 @@ const IntroduceRow = ({ loading, visitData }) => (
         <MiniBar data={visitData} />
       </ChartCard>
     </Col>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
+    <Col {...topColResponsiveProps}> */}
+      {/* <ChartCard
         loading={loading}
         bordered={false}
         title={
@@ -197,7 +172,7 @@ const IntroduceRow = ({ loading, visitData }) => (
       >
         <MiniProgress percent={78} strokeWidth={8} target={80} color="#13C2C2" />
       </ChartCard>
-    </Col>
+    </Col> */}
   </Row>
 );
 
