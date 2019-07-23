@@ -67,7 +67,7 @@ const TopSearch = ({ loading, visitData2 }) => (
       visitData2.costRank.map(
         (item, index) => {
           return (
-            <Row gutter={68} type="flex">
+            <Row gutter={24} type="flex">
               <Col
                 sm={8}
                 xs={8}
@@ -88,8 +88,8 @@ const TopSearch = ({ loading, visitData2 }) => (
                 <MiniProgress percent={item.percent} strokeWidth={8} color='#975FE4' />
               </Col>
               <Col
-                sm={2}
-                xs={2}
+                sm={4}
+                xs={4}
                 style={{
                   marginBottom: 24,
                 }}
