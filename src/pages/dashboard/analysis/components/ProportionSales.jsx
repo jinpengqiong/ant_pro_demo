@@ -16,50 +16,17 @@ const ProportionSales = ({
     loading={loading}
     className={styles.salesCard}
     bordered={false}
-    title={
-      <FormattedMessage
-        id="dashboard-analysis.analysis.the-proportion-of-sales"
-        defaultMessage="The Proportion of Sales"
-      />
-    }
+    title='费用占比'
     style={{
       height: '100%',
     }}
-    extra={
-      <div className={styles.salesCardExtra}>
-        {dropdownGroup}
-        <div className={styles.salesTypeRadio}>
-          <Radio.Group value={salesType} onChange={handleChangeSalesType}>
-            <Radio.Button value="all">
-              <FormattedMessage id="dashboard-analysis.channel.all" defaultMessage="ALL" />
-            </Radio.Button>
-            <Radio.Button value="online">
-              <FormattedMessage id="dashboard-analysis.channel.online" defaultMessage="Online" />
-            </Radio.Button>
-            <Radio.Button value="stores">
-              <FormattedMessage id="dashboard-analysis.channel.stores" defaultMessage="Stores" />
-            </Radio.Button>
-          </Radio.Group>
-        </div>
-      </div>
-    }
   >
     <div>
-      <h4
-        style={{
-          marginTop: 8,
-          marginBottom: 32,
-        }}
-      >
-        <FormattedMessage id="dashboard-analysis.analysis.sales" defaultMessage="Sales" />
-      </h4>
       <Pie
         hasLegend
-        subTitle={
-          <FormattedMessage id="dashboard-analysis.analysis.sales" defaultMessage="Sales" />
-        }
-        total={() => <Yuan>{salesPieData.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
-        data={salesPieData}
+        subTitle='费用'
+        total={() => <Yuan>{salesPieData && salesPieData.costRatio.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
+        data={salesPieData && salesPieData.costRatio}
         valueFormat={value => <Yuan>{value}</Yuan>}
         height={248}
         lineWidth={4}

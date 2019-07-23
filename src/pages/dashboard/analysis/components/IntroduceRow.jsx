@@ -33,7 +33,8 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <br/>
+            { visitData && '单位：' + visitData.storage.suffix }
           </Tooltip>
         }
         loading={loading}
@@ -41,53 +42,17 @@ const IntroduceRow = ({ loading, visitData }) => (
         footer={
           <Field label={visitData && visitData.storage.subTitle} value={visitData && visitData.storage.subTotal} />
         }
-        contentHeight={46}
+        contentHeight={50}
       >
-        <MiniBar height={46} data={visitData && visitData.storage.data} />
+        <MiniBar height={46} color="#975FE4" data={visitData && visitData.storage.data} />
       </ChartCard>
     </Col>
 
-    {/* <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        loading={loading}
-        title={<FormattedMessage id="dashboard-analysis.analysis.visits" defaultMessage="Visits" />}
-        action={
-          <Tooltip
-            title={
-              <FormattedMessage
-                id="dashboard-analysis.analysis.introduce"
-                defaultMessage="Introduce"
-              />
-            }
-          >
-            <Icon type="info-circle-o" />
-          </Tooltip>
-        }
-        total={numeral(8846).format('0,0')}
-        footer={
-          <Field
-            label={
-              <FormattedMessage
-                id="dashboard-analysis.analysis.day-visits"
-                defaultMessage="Daily Visits"
-              />
-            }
-            value={numeral(1234).format('0,0')}
-          />
-        }
-        contentHeight={46}
-      >
-        <MiniArea color="#975FE4" data={visitData} />
-      </ChartCard>
-    </Col>
     <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
         loading={loading}
-        title={
-          <FormattedMessage id="dashboard-analysis.analysis.payments" defaultMessage="Payments" />
-        }
+        title={visitData ? visitData.cdn.title : ''}
         action={
           <Tooltip
             title={
@@ -97,36 +62,28 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <br/>
+            { visitData && '单位：' + visitData.cdn.suffix }
           </Tooltip>
         }
-        total={numeral(6560).format('0,0')}
+        total={visitData ? visitData.cdn.total : ''}
         footer={
           <Field
-            label={
-              <FormattedMessage
-                id="dashboard-analysis.analysis.conversion-rate"
-                defaultMessage="Conversion Rate"
-              />
-            }
-            value="60%"
+            label={visitData && visitData.cdn.subTitle}
+            value={visitData && visitData.cdn.subTotal}
           />
         }
-        contentHeight={46}
+        contentHeight={50}
       >
-        <MiniBar data={visitData} />
+        <MiniArea color="#975FE4" data={visitData && visitData.cdn.data} />
       </ChartCard>
     </Col>
-    <Col {...topColResponsiveProps}> */}
-      {/* <ChartCard
-        loading={loading}
+
+    <Col {...topColResponsiveProps}>
+      <ChartCard
         bordered={false}
-        title={
-          <FormattedMessage
-            id="dashboard-analysis.analysis.operational-effect"
-            defaultMessage="Operational Effect"
-          />
-        }
+        loading={loading}
+        title={visitData ? visitData.transCode.title : ''}
         action={
           <Tooltip
             title={
@@ -136,43 +93,53 @@ const IntroduceRow = ({ loading, visitData }) => (
               />
             }
           >
-            <Icon type="info-circle-o" />
+            <br/>
+            { visitData && '单位：' + visitData.transCode.suffix }
           </Tooltip>
         }
-        total="78%"
+        total={visitData ? visitData.transCode.total : ''}
         footer={
-          <div
-            style={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-            }}
-          >
-            <Trend
-              flag="up"
-              style={{
-                marginRight: 16,
-              }}
-            >
-              <FormattedMessage
-                id="dashboard-analysis.analysis.week"
-                defaultMessage="Weekly Changes"
-              />
-              <span className={styles.trendText}>12%</span>
-            </Trend>
-            <Trend flag="down">
-              <FormattedMessage
-                id="dashboard-analysis.analysis.day"
-                defaultMessage="Weekly Changes"
-              />
-              <span className={styles.trendText}>11%</span>
-            </Trend>
-          </div>
+          <Field
+            label={visitData && visitData.transCode.subTitle}
+            value={visitData && visitData.transCode.subTotal}
+          />
         }
-        contentHeight={46}
+        contentHeight={50}
       >
-        <MiniProgress percent={78} strokeWidth={8} target={80} color="#13C2C2" />
+        <MiniBar color="#975FE4" data={visitData && visitData.transCode.data} />
       </ChartCard>
-    </Col> */}
+    </Col>
+
+    <Col {...topColResponsiveProps}>
+      <ChartCard
+        bordered={false}
+        loading={loading}
+        title={visitData ? visitData.recognition.title : ''}
+        action={
+          <Tooltip
+            title={
+              <FormattedMessage
+                id="dashboard-analysis.analysis.introduce"
+                defaultMessage="Introduce"
+              />
+            }
+          >
+            <br/>
+            { visitData && '单位：' + visitData.recognition.suffix }
+          </Tooltip>
+        }
+        total={visitData ? visitData.recognition.total : ''}
+        footer={
+          <Field
+            label={visitData && visitData.recognition.subTitle}
+            value={visitData && visitData.recognition.subTotal}
+          />
+        }
+        contentHeight={50}
+      >
+        <MiniArea color="#975FE4" data={visitData && visitData.recognition.data} />
+      </ChartCard>
+    </Col>
   </Row>
 );
 

@@ -32,6 +32,7 @@ class Analysis extends Component {
 
   timeoutId = 0;
 
+
   componentDidMount() {
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -189,7 +190,7 @@ class Analysis extends Component {
             <RangePicker
               value={rangePickerValue}
               onChange={this.handleRangePickerChange}
-              style={{ width: 256 }}
+              className="picker"
             />
           </div>
           <br/>
@@ -197,7 +198,7 @@ class Analysis extends Component {
           <Suspense fallback={<PageLoading />}>
             <IntroduceRow loading={loading} visitData={totalData} />
           </Suspense>
-          <Suspense fallback={null}>
+          {/* <Suspense fallback={null}>
             <SalesCard
               rangePickerValue={rangePickerValue}
               salesData={salesData}
@@ -206,7 +207,7 @@ class Analysis extends Component {
               loading={loading}
               selectDate={this.selectDate}
             />
-          </Suspense>
+          </Suspense> */}
           <Row
             gutter={24}
             type="flex"
@@ -216,27 +217,26 @@ class Analysis extends Component {
           >
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <TopSearch
-                  loading={loading}
-                  visitData2={visitData2}
-                  searchData={searchData}
+                <ProportionSales
                   dropdownGroup={dropdownGroup}
+                  salesType={salesType}
+                  loading={loading}
+                  salesPieData={totalData}
+                  handleChangeSalesType={this.handleChangeSalesType}
                 />
               </Suspense>
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <ProportionSales
-                  dropdownGroup={dropdownGroup}
-                  salesType={salesType}
+                <TopSearch
                   loading={loading}
-                  salesPieData={salesPieData}
-                  handleChangeSalesType={this.handleChangeSalesType}
+                  visitData2={totalData}
+                  dropdownGroup={dropdownGroup}
                 />
               </Suspense>
             </Col>
           </Row>
-          <Suspense fallback={null}>
+          {/* <Suspense fallback={null}>
             <OfflineData
               activeKey={activeKey}
               loading={loading}
@@ -244,7 +244,7 @@ class Analysis extends Component {
               offlineChartData={offlineChartData}
               handleTabChange={this.handleTabChange}
             />
-          </Suspense>
+          </Suspense> */}
         </React.Fragment>
       </GridContent>
     );

@@ -103,7 +103,7 @@ export default {
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
-    'primary-color': primaryColor,
+    'primary-color': 'purple',
   },
   define: {
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:

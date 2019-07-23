@@ -2,7 +2,7 @@ import { Card, Col, Icon, Row, Table, Tooltip } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import React from 'react';
 import numeral from 'numeral';
-import { MiniArea } from './Charts';
+import { MiniArea, MiniProgress } from './Charts';
 import NumberInfo from './NumberInfo';
 import Trend from './Trend';
 import styles from '../style.less';
@@ -52,111 +52,65 @@ const columns = [
   },
 ];
 
-const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
+const TopSearch = ({ loading, visitData2 }) => (
   <Card
     loading={loading}
     bordered={false}
-    title={
-      <FormattedMessage
-        id="dashboard-analysis.analysis.online-top-search"
-        defaultMessage="Online Top Search"
-      />
-    }
-    extra={dropdownGroup}
+    title='频道费用排行'
     style={{
       height: '100%',
     }}
   >
-    <Row gutter={68} type="flex">
-      <Col
-        sm={12}
-        xs={24}
-        style={{
-          marginBottom: 24,
-        }}
-      >
-        <NumberInfo
-          subTitle={
-            <span>
-              <FormattedMessage
-                id="dashboard-analysis.analysis.search-users"
-                defaultMessage="search users"
-              />
-              <Tooltip
-                title={
-                  <FormattedMessage
-                    id="dashboard-analysis.analysis.introduce"
-                    defaultMessage="introduce"
-                  />
-                }
+    {
+      visitData2
+      &&
+      visitData2.costRank.map(
+        (item, index) => {
+          return (
+            <Row gutter={68} type="flex">
+              <Col
+                sm={8}
+                xs={8}
+                style={{
+                  marginBottom: 24,
+                }}
               >
-                <Icon
-                  style={{
-                    marginLeft: 8,
-                  }}
-                  type="info-circle-o"
-                />
-              </Tooltip>
-            </span>
-          }
-          gap={8}
-          total={numeral(12321).format('0,0')}
-          status="up"
-          subTotal={17.1}
-        />
-        <MiniArea line height={45} data={visitData2} />
-      </Col>
-      <Col
-        sm={12}
-        xs={24}
-        style={{
-          marginBottom: 24,
-        }}
-      >
-        <NumberInfo
-          subTitle={
-            <span>
-              <FormattedMessage
-                id="dashboard-analysis.analysis.per-capita-search"
-                defaultMessage="Per Capita Search"
-              />
-              <Tooltip
-                title={
-                  <FormattedMessage
-                    id="dashboard-analysis.analysis.introduce"
-                    defaultMessage="introduce"
-                  />
-                }
+                <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#975FE4' }}>{index+1}</span>
+                <span style={{ marginLeft: '5px' }}>{item.name}</span>
+              </Col>
+              <Col
+                sm={8}
+                xs={8}
+                style={{
+                  marginBottom: 24,
+                }}
               >
-                <Icon
-                  style={{
-                    marginLeft: 8,
-                  }}
-                  type="info-circle-o"
-                />
-              </Tooltip>
-            </span>
-          }
-          total={2.7}
-          status="down"
-          subTotal={26.2}
-          gap={8}
-        />
-        <MiniArea line height={45} data={visitData2} />
-      </Col>
-    </Row>
-    <Table
-      rowKey={record => record.index}
-      size="small"
-      columns={columns}
-      dataSource={searchData}
-      pagination={{
-        style: {
-          marginBottom: 0,
-        },
-        pageSize: 5,
-      }}
-    />
+                <MiniProgress percent={item.percent} strokeWidth={8} color='#975FE4' />
+              </Col>
+              <Col
+                sm={2}
+                xs={2}
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                { item.percent + '%'}
+              </Col>
+              <Col
+                sm={2}
+                xs={2}
+                style={{
+                  marginBottom: 24,
+                }}
+              >
+                {'¥'+item.count}
+              </Col>
+          </Row>
+          )
+        }
+      )
+    }
+
   </Card>
 );
 
