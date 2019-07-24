@@ -11,13 +11,14 @@ const TheFiles = ({ loading, myFiles }) => (
     style={{
       marginTop: 32,
       height:'100%',
+      marginBottom: 30
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
       {
         myFiles && myFiles.files.map(
           (item, index) => (
-            <div style={{ textAlign: 'center', marginLeft: '20px' }} key={index}>
+            <div style={{ textAlign: 'center', marginLeft: '10px' }} key={index}>
               <p>{item.name}</p>
               <WaterWave
                 height={161}
