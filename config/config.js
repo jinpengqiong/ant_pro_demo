@@ -88,7 +88,7 @@ export default {
       authority: ['admin', 'user'],
       routes: [
         {
-          name: 'analysis',
+          name: '111',
           path: '/dashboard/analysis',
           component: './dashboard/analysis',
         },

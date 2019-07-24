@@ -23,13 +23,13 @@ const menuDataRender = menuList =>
   });
 
 const footerRender = (_, defaultDom) => {
-  if (!isAntDesignPro()) {
-    return defaultDom;
-  }
+  // if (!isAntDesignPro()) {
+  //   return defaultDom;
+  // }
 
   return (
     <>
-      {defaultDom}
+      {/* {defaultDom}
       <div
         style={{
           padding: '0px 24px 24px',
@@ -43,7 +43,7 @@ const footerRender = (_, defaultDom) => {
             alt="netlify logo"
           />
         </a>
-      </div>
+      </div> */}
     </>
   );
 };
@@ -107,7 +107,7 @@ const BasicLayout = props => {
       footerRender={footerRender}
       menuDataRender={menuDataRender}
       formatMessage={formatMessage}
-      rightContentRender={rightProps => <RightContent {...rightProps} />}
+      // rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}
       {...settings}
     >

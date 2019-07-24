@@ -9,11 +9,12 @@ import styles from './style.less';
 
 const { RangePicker } = DatePicker;
 
-const IntroduceRow = React.lazy(() => import('./components/IntroduceRow'));
-const SalesCard = React.lazy(() => import('./components/SalesCard'));
-const TopSearch = React.lazy(() => import('./components/TopSearch'));
-const ProportionSales = React.lazy(() => import('./components/ProportionSales'));
-const OfflineData = React.lazy(() => import('./components/OfflineData'));
+const StorageCdnTransCode = React.lazy(() => import('./components/StorageCdnTransCode'));
+const TheFiles = React.lazy(() => import('./components/TheFiles'));
+const CostRank = React.lazy(() => import('./components/CostRank'));
+const CostRatio = React.lazy(() => import('./components/CostRatio'));
+const Surplus = React.lazy(() => import('./components/Surplus'));
+const AuditFinals = React.lazy(() => import('./components/AuditFinals'));
 
 @connect(({ dashboardAnalysis, loading }) => ({
   dashboardAnalysis,
@@ -130,42 +131,9 @@ class Analysis extends Component {
   }
 
   render() {
-    const { rangePickerValue, salesType, currentTabKey } = this.state;
-    const { dashboardAnalysis, loading } = this.props;
+    const { rangePickerValue, salesType } = this.state;
+    const { loading } = this.props;
     const { timeType, totalData } = this.state;
-    const {
-      visitData,
-      visitData2,
-      salesData,
-      searchData,
-      offlineData,
-      offlineChartData,
-      salesTypeData,
-      salesTypeDataOnline,
-      salesTypeDataOffline,
-    } = dashboardAnalysis;
-    let salesPieData;
-
-    if (salesType === 'all') {
-      salesPieData = salesTypeData;
-    } else {
-      salesPieData = salesType === 'online' ? salesTypeDataOnline : salesTypeDataOffline;
-    }
-
-    const menu = (
-      <Menu>
-        <Menu.Item>操作一</Menu.Item>
-        <Menu.Item>操作二</Menu.Item>
-      </Menu>
-    );
-    const dropdownGroup = (
-      <span className={styles.iconGroup}>
-        <Dropdown overlay={menu} placement="bottomRight">
-          <Icon type="ellipsis" />
-        </Dropdown>
-      </span>
-    );
-    const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
     return (
       <GridContent>
         <React.Fragment>
@@ -196,29 +164,16 @@ class Analysis extends Component {
           <br/>
           </Suspense>
           <Suspense fallback={<PageLoading />}>
-            <IntroduceRow loading={loading} visitData={totalData} />
+            <StorageCdnTransCode loading={loading} visitData={totalData} />
           </Suspense>
-          {/* <Suspense fallback={null}>
-            <SalesCard
-              rangePickerValue={rangePickerValue}
-              salesData={salesData}
-              isActive={this.isActive}
-              handleRangePickerChange={this.handleRangePickerChange}
-              loading={loading}
-              selectDate={this.selectDate}
-            />
-          </Suspense> */}
           <Row
             gutter={24}
             type="flex"
-            style={{
-              marginTop: 24,
-            }}
+            style={{ marginTop: 24 }}
           >
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <ProportionSales
-                  dropdownGroup={dropdownGroup}
+                <CostRatio
                   salesType={salesType}
                   loading={loading}
                   salesPieData={totalData}
@@ -228,23 +183,36 @@ class Analysis extends Component {
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <TopSearch
+                <CostRank
                   loading={loading}
                   visitData2={totalData}
-                  dropdownGroup={dropdownGroup}
                 />
               </Suspense>
             </Col>
           </Row>
-          {/* <Suspense fallback={null}>
-            <OfflineData
-              activeKey={activeKey}
-              loading={loading}
-              offlineData={offlineData}
-              offlineChartData={offlineChartData}
-              handleTabChange={this.handleTabChange}
-            />
-          </Suspense> */}
+          <Row
+            gutter={24}
+            type="flex"
+            style={{
+              marginTop: 24,
+            }}
+          >
+            <Col xl={6} lg={24} md={24} sm={24} xs={24}>
+              <Suspense fallback={null}>
+                <Surplus surplusData={totalData} loading={loading}/>
+              </Suspense>
+            </Col>
+            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+              <Suspense fallback={null}>
+                <TheFiles myFiles={totalData} loading={loading}/>
+              </Suspense>
+            </Col>
+            <Col xl={6} lg={24} md={24} sm={24} xs={24}>
+              <Suspense fallback={null}>
+                <AuditFinals myAudit={totalData} loading={loading} />
+              </Suspense>
+            </Col>
+          </Row>
         </React.Fragment>
       </GridContent>
     );

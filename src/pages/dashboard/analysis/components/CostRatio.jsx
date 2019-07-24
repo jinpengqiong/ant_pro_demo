@@ -5,18 +5,12 @@ import { Pie } from './Charts';
 import Yuan from '../utils/Yuan';
 import styles from '../style.less';
 
-const ProportionSales = ({
-  dropdownGroup,
-  salesType,
-  loading,
-  salesPieData,
-  handleChangeSalesType,
-}) => (
+const CostRatio = ({ loading, salesPieData }) => (
   <Card
     loading={loading}
     className={styles.salesCard}
     bordered={false}
-    title='费用占比'
+    title="费用占比"
     style={{
       height: '100%',
     }}
@@ -24,7 +18,7 @@ const ProportionSales = ({
     <div>
       <Pie
         hasLegend
-        subTitle='费用'
+        subTitle="费用"
         total={() => <Yuan>{salesPieData && salesPieData.costRatio.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
         data={salesPieData && salesPieData.costRatio}
         valueFormat={value => <Yuan>{value}</Yuan>}
@@ -35,4 +29,4 @@ const ProportionSales = ({
   </Card>
 );
 
-export default ProportionSales;
+export default CostRatio;

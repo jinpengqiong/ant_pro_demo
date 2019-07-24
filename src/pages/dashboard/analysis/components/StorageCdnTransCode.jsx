@@ -18,7 +18,7 @@ const topColResponsiveProps = {
   },
 };
 
-const IntroduceRow = ({ loading, visitData }) => (
+const StorageCdnTransCode = ({ loading, visitData }) => (
   <Row gutter={24} type="flex">
     <Col {...topColResponsiveProps}>
       <ChartCard
@@ -143,4 +143,4 @@ const IntroduceRow = ({ loading, visitData }) => (
   </Row>
 );
 
-export default IntroduceRow;
+export default StorageCdnTransCode;
