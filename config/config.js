@@ -87,6 +87,7 @@ export default {
       Routes: ['src/pages/Authorized'],
       authority: ['admin', 'user'],
       routes: [
+        { path: '/', redirect: '/dashboard/analysis' },
         {
           name: '111',
           path: '/dashboard/analysis',
