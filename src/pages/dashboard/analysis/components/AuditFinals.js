@@ -25,15 +25,17 @@ const AuditFinals = ({ loading, myAudit }) => {
       height: '100%',
     }}
   >
-    <Pie
-        hasLegend
-        subTitle="费用"
-        total={ pieData.reduce((pre, now) => now.y + pre, 0) + '个' }
-        data={pieData}
-        valueFormat={value => value + '个' }
-        height={200}
-        lineWidth={4}
-      />
+    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+      <Pie
+          hasLegend
+          subTitle="费用"
+          total={ pieData.reduce((pre, now) => now.y + pre, 0) + '个' }
+          data={pieData}
+          valueFormat={value => value + '个' }
+          height={200}
+          lineWidth={4}
+        />
+    </div>
   </Card>
   )
 };
