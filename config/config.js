@@ -89,7 +89,7 @@ export default {
       routes: [
         { path: '/', redirect: '/dashboard/analysis' },
         {
-          name: '111',
+          name: 'analysis',
           path: '/dashboard/analysis',
           component: './dashboard/analysis',
         },
