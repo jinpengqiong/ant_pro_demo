@@ -6,7 +6,7 @@ import Yuan from '../utils/Yuan';
 const AuditFinals = ({ loading, myAudit }) => {
   let pieData = []
   myAudit && myAudit.auditfinals.map(
-    (v, i) => {
+    v => {
       pieData.push(
         {
           x: v.name,
@@ -22,7 +22,7 @@ const AuditFinals = ({ loading, myAudit }) => {
     title="素材通过率"
     style={{
       marginTop: 32,
-      height:'100%'
+      height: '100%',
     }}
   >
     <Pie
@@ -35,6 +35,7 @@ const AuditFinals = ({ loading, myAudit }) => {
         lineWidth={4}
       />
   </Card>
-)};
+  )
+};
 
 export default AuditFinals;

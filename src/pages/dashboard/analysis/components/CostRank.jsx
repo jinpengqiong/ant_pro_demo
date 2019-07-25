@@ -36,8 +36,8 @@ const CostRank = ({ loading, visitData2 }) => (
               </Col>
               <Col
                 key={1}
-                sm={8}
-                xs={8}
+                sm={7}
+                xs={7}
                 style={{
                   marginBottom: 24,
                 }}
