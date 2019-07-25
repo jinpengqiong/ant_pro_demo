@@ -75,6 +75,7 @@ export default {
     defaultGitUrl: 'https://github.com/ant-design/pro-blocks',
   },
   hash: true,
+  history: 'hash',
   targets: {
     ie: 11,
   },
@@ -91,6 +92,7 @@ export default {
         {
           name: 'analysis',
           path: '/dashboard/analysis',
+          icon: 'dashboard',
           component: './dashboard/analysis',
         },
         {

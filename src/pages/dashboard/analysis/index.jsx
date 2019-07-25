@@ -213,6 +213,7 @@ class Analysis extends Component {
               </Suspense>
             </Col>
           </Row>
+          <br/>
         </React.Fragment>
       </GridContent>
     );
