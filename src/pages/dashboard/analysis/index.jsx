@@ -1,4 +1,4 @@
-import { Col, Dropdown, Icon, Menu, Row, Tabs, DatePicker, Radio } from 'antd';
+import { Col, Row, DatePicker, Radio } from 'antd';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi-plugin-react/locale';
@@ -23,7 +23,6 @@ const AuditFinals = React.lazy(() => import('./components/AuditFinals'));
 class Analysis extends Component {
   state = {
     salesType: 'all',
-    currentTabKey: '',
     rangePickerValue: getTimeDistance('month'),
     totalData: null,
     timeType: 'month',
@@ -74,12 +73,6 @@ class Analysis extends Component {
     });
   };
 
-  handleTabChange = key => {
-    this.setState({
-      currentTabKey: key,
-    });
-  };
-
   handleRangePickerChange = rangePickerValue => {
     console.log('rangePickerValue', rangePickerValue)
     if (JSON.stringify(rangePickerValue) === '[]') {
@@ -88,7 +81,6 @@ class Analysis extends Component {
     }
     const startTime = rangePickerValue[0].format('YYYY/MM/DD')
     const endTime = rangePickerValue[1].format('YYYY/MM/DD')
-    const { dispatch } = this.props;
     this.setState({ rangePickerValue, timeType: 3 });
     this.getTotalData(3, startTime, endTime)
   };
@@ -114,7 +106,6 @@ class Analysis extends Component {
   handleSizeChange = e => {
     // console.log('e', e.target.value)
     this.setState({ timeType: e.target.value });
-    const { dispatch } = this.props;
     this.setState({
       rangePickerValue: getTimeDistance(e.target.value),
     });
