@@ -10,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '融媒数据',
+  title: '',
   pwa: false,
   iconfontUrl: '',
 };

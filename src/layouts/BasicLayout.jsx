@@ -9,9 +9,9 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Authorized from '@/utils/Authorized';
-import RightContent from '@/components/GlobalHeader/RightContent';
-import { isAntDesignPro } from '@/utils/utils';
-import logo from '../assets/logo.svg';
+// import RightContent from '@/components/GlobalHeader/RightContent';
+// import { isAntDesignPro } from '@/utils/utils';
+// import logo from '../assets/logo.svg';
 
 /**
  * use Authorized check all menu item
@@ -77,8 +77,9 @@ const BasicLayout = props => {
 
   return (
     <ProLayout
-      logo={logo}
+      logo={false}
       onCollapse={handleMenuCollapse}
+      menuRender={false}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl) {
           return defaultDom;
