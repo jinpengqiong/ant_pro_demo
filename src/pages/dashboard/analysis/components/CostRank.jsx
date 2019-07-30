@@ -42,7 +42,7 @@ const CostRank = ({ loading, visitData2 }) => (
                   marginBottom: 24,
                 }}
               >
-                <MiniProgress percent={item.percent} strokeWidth={8} color="#975FE4" />
+                <MiniProgress percent={item.percent === 'NaN' ? 0 : item.percent} strokeWidth={8} color="#975FE4" />
               </Col>
               <Col
                 key={2}
@@ -52,7 +52,7 @@ const CostRank = ({ loading, visitData2 }) => (
                   marginBottom: 24,
                 }}
               >
-                { item.percent + '%'}
+                { item.percent === 'NaN' ? '0%' : item.percent }
               </Col>
               <Col
                 key={3}
