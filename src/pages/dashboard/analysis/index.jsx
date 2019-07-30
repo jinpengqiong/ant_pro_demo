@@ -34,6 +34,7 @@ class Analysis extends Component {
 
 
   componentDidMount() {
+    console.log('location', window.location)
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
       dispatch({

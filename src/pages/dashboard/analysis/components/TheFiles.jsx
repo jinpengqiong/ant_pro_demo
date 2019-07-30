@@ -24,7 +24,7 @@ const TheFiles = ({ loading, myFiles }) => (
                 height={161}
                 color="#975FE4"
                 title={item.count + '个'}
-                percent={parseFloat(item.percent)} />
+                percent={item.percent === 'NaN'? 0 : parseFloat(item.percent)} />
             </div>
           )
         )
