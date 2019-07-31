@@ -26,6 +26,7 @@ class Analysis extends Component {
     rangePickerValue: getTimeDistance('month'),
     totalData: null,
     timeType: 'month',
+    organizationId:''
   };
 
   reqRef = 0;
@@ -34,16 +35,26 @@ class Analysis extends Component {
 
 
   componentDidMount() {
-    console.log('location', window.location)
+    console.log('location', this.getQueryString('organizationId'))
+    let organizationId
+    if (window) {
+      organizationId = this.getQueryString(window.location.search, 'organizationId')
+      this.getTotalData(2, '', '', organizationId)
+      this.setState({ organizationId })
+    }
+    if (window.plus) {
+      const url = window.plus.webView.currentWebview().getUrl()
+      organizationId = this.getQueryString(url, 'organizationId')
+      this.getTotalData(2, '', '', organizationId)
+      this.setState({ organizationId })
+    }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
       dispatch({
         type: 'dashboardAnalysis/fetch',
       });
     });
-    this.getTotalData(2)
   }
-
 
   componentWillUnmount() {
     const { dispatch } = this.props;
@@ -54,14 +65,22 @@ class Analysis extends Component {
     clearTimeout(this.timeoutId);
   }
 
-  getTotalData = (timeType, startTime = '', endTime = '') => {
-    const url = `http://studioapi.muzhiyun.cn/api/statistiDataGraphics/all/getStatistical?timeType=${timeType}&sourceType=1&id=8EF2F2CE-6481-4C39-BE69-56F3DF7AED86&startTime=${startTime}&endTime=${endTime}`
+  getQueryString = (url, name) => {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = url.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+  }
+
+
+  getTotalData = (timeType, startTime = '', endTime = '', orgId = '8EF2F2CE-6481-4C39-BE69-56F3DF7AED86') => {
+    const url = `http://studioapi.muzhiyun.cn/api/statistiDataGraphics/all/getStatistical?timeType=${timeType}&sourceType=1&id=${orgId}&startTime=${startTime}&endTime=${endTime}`
     fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
+    .then(response => response.json())
+    .then(responseJson => {
       console.log('responseJson',responseJson)
       this.setState({ totalData: responseJson.data })
     }).catch(err => console.log(err))
@@ -83,7 +102,7 @@ class Analysis extends Component {
     const startTime = rangePickerValue[0].format('YYYY/MM/DD')
     const endTime = rangePickerValue[1].format('YYYY/MM/DD')
     this.setState({ rangePickerValue, timeType: 3 });
-    this.getTotalData(3, startTime, endTime)
+    this.getTotalData(3, startTime, endTime, this.state.organizationId)
   };
 
   isActive = type => {
@@ -112,10 +131,10 @@ class Analysis extends Component {
     });
     switch (e.target.value) {
       case 'month':
-          this.getTotalData(2)
+          this.getTotalData(2, '', '', this.state.organizationId)
         break
       case 'week':
-          this.getTotalData(1)
+          this.getTotalData(1, '', '', this.state.organizationId)
         break
       default:
         return 1
