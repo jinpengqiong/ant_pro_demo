@@ -43,7 +43,7 @@ class Analysis extends Component {
       this.setState({ organizationId })
     }
     if (window.plus) {
-      const url = window.plus.webView.currentWebview().getUrl()
+      const url = window.plus.webView.getUrl()
       organizationId = this.getQueryString(url, 'organizationId')
       this.getTotalData(2, '', '', organizationId)
       this.setState({ organizationId })
