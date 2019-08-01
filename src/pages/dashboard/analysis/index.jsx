@@ -37,14 +37,13 @@ class Analysis extends Component {
   componentDidMount() {
     console.log('location', this.getQueryString('organizationId'))
     let organizationId
-    if (window) {
-      organizationId = this.getQueryString(window.location.search, 'organizationId')
+    if (window.plus) {
+      const url = window.plus.webView.currentWebview().getUrl()
+      organizationId = this.getQueryString(url, 'organizationId')
       this.getTotalData(2, '', '', organizationId)
       this.setState({ organizationId })
-    }
-    if (window.plus) {
-      const url = window.plus.webView.getUrl()
-      organizationId = this.getQueryString(url, 'organizationId')
+    } else if (window) {
+      organizationId = this.getQueryString(window.location.search, 'organizationId')
       this.getTotalData(2, '', '', organizationId)
       this.setState({ organizationId })
     }
@@ -153,16 +152,10 @@ class Analysis extends Component {
               <div className={styles.salesExtra}>
                 <Radio.Group value={timeType} onChange={this.handleSizeChange} style={{ marginBottom: 10 }}>
                   <Radio.Button value="week">
-                    <FormattedMessage
-                      id="dashboard-analysis.analysis.all-week"
-                      defaultMessage="All Week"
-                    />
+                    本周
                   </Radio.Button>
                   <Radio.Button value="month">
-                    <FormattedMessage
-                      id="dashboard-analysis.analysis.all-month"
-                      defaultMessage="All Month"
-                    />
+                    本月
                   </Radio.Button>
                 </Radio.Group>
               </div>

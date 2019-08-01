@@ -80,6 +80,7 @@ const BasicLayout = props => {
       logo={false}
       onCollapse={handleMenuCollapse}
       menuRender={false}
+      headerRender={false}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl) {
           return defaultDom;
@@ -105,7 +106,7 @@ const BasicLayout = props => {
           <span>{route.breadcrumbName}</span>
         );
       }}
-      footerRender={footerRender}
+      footerRender={false}
       menuDataRender={menuDataRender}
       formatMessage={formatMessage}
       // rightContentRender={rightProps => <RightContent {...rightProps} />}

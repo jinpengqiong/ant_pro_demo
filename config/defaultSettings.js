@@ -4,7 +4,7 @@ export default {
   layout: 'sidemenu',
   contentWidth: 'Fluid',
   fixedHeader: false,
-  autoHideHeader: false,
+  autoHideHeader: true,
   fixSiderbar: false,
   colorWeak: false,
   menu: {

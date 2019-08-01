@@ -34,7 +34,7 @@ const StorageCdnTransCode = ({ loading, visitData }) => (
             }
           >
             <br/>
-            { visitData && '单位：' + visitData.storage.suffix }
+            { visitData && visitData.storage.suffix ?  '单位：' + visitData.storage.suffix : '' }
           </Tooltip>
         }
         loading={loading}
@@ -63,7 +63,7 @@ const StorageCdnTransCode = ({ loading, visitData }) => (
             }
           >
             <br/>
-            { visitData && '单位：' + visitData.cdn.suffix }
+            { visitData && visitData.cdn.suffix ?  '单位：' + visitData.cdn.suffix : '' }
           </Tooltip>
         }
         total={visitData ? visitData.cdn.total : ''}
@@ -94,7 +94,7 @@ const StorageCdnTransCode = ({ loading, visitData }) => (
             }
           >
             <br/>
-            { visitData && '单位：' + visitData.transCode.suffix }
+            { visitData && visitData.transCode.suffix ?  '单位：' + visitData.transCode.suffix : ''  }
           </Tooltip>
         }
         total={visitData ? visitData.transCode.total : ''}
@@ -125,7 +125,7 @@ const StorageCdnTransCode = ({ loading, visitData }) => (
             }
           >
             <br/>
-            { visitData && '单位：' + visitData.recognition.suffix }
+            { visitData && visitData.recognition.suffix ?  '单位：' + visitData.recognition.suffix : '' }
           </Tooltip>
         }
         total={visitData ? visitData.recognition.total : ''}
