@@ -14,7 +14,7 @@ const TheFiles = React.lazy(() => import('./components/TheFiles'));
 const CostRank = React.lazy(() => import('./components/CostRank'));
 const CostRatio = React.lazy(() => import('./components/CostRatio'));
 const Surplus = React.lazy(() => import('./components/Surplus'));
-const AuditFinals = React.lazy(() => import('./components/AuditFinals'));
+const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'));
 
 @connect(({ dashboardAnalysis, loading }) => ({
   dashboardAnalysis,
@@ -26,7 +26,11 @@ class Analysis extends Component {
     rangePickerValue: getTimeDistance('month'),
     totalData: null,
     timeType: 'month',
-    organizationId:''
+    roomId: '',
+    currentDateData: null,
+    currentDateHoursData: null,
+    GenderData: null,
+    RegionData: null,
   };
 
   reqRef = 0;
@@ -35,17 +39,24 @@ class Analysis extends Component {
 
 
   componentDidMount() {
-    console.log('location', this.getQueryString('organizationId'))
-    let organizationId
+    let roomId
     if (window.plus) {
       const url = window.plus.webView.currentWebview().getUrl()
-      organizationId = this.getQueryString(url, 'organizationId')
-      this.getTotalData(2, '', '', organizationId)
-      this.setState({ organizationId })
+      roomId = this.getQueryString(url, 'roomId')
+      this.gatCurrentDataData(332808)
+      this.timeoutId = setInterval(
+        () => {
+          this.gatCurrentDataData(332808)
+        }, 300000)
+      this.setState({ roomId })
     } else if (window) {
-      organizationId = this.getQueryString(window.location.search, 'organizationId')
-      this.getTotalData(2, '', '', organizationId)
-      this.setState({ organizationId })
+      roomId = this.getQueryString(window.location.search, 'roomId')
+      this.gatCurrentDataData(332808)
+      // this.timeoutId = setInterval(
+      //   () => {
+      //     this.gatCurrentDataData(332808)
+      //   }, 3000)
+      this.setState({ roomId })
     }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -55,6 +66,83 @@ class Analysis extends Component {
     });
   }
 
+  getQueryString = (url, name) => {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = url.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+  }
+
+  gatCurrentDataData = roomId => {
+    const url = `http://ai.muzhiyun.cn/api/v1/room/totalCount?room_id=${roomId}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('responseJson', responseJson)
+      this.setState({ currentDateData: responseJson.response })
+    }).catch(err => console.log(err))
+  }
+
+  gatCurrentDayHoursData = roomId => {
+    const tsStart = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
+    const tsEnd = parseInt((new Date().getTime())/1000)
+    const url = `http://ai.muzhiyun.cn/api/v1/room/listHour?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('responseJson', responseJson)
+      this.setState({ currentDateHoursData: responseJson.response })
+    }).catch(err => console.log(err))
+  }
+
+  gatCurrentDateData = roomId => {
+    const tsStart = parseInt((new Date(new Date(new Date().getTime() - 7*24*60*60*1000).toLocaleDateString()).getTime())/1000);
+    const tsEnd = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
+    const url = `http://ai.muzhiyun.cn/api/v1/room/listHour?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('responseJson', responseJson)
+      this.setState({ currentDateHoursData: responseJson.response })
+    }).catch(err => console.log(err))
+  }
+
+  gatGenderData = roomId => {
+    const url = `http://aitest.muzhiyun.cn/api/v1/room/genderData?room_id=${roomId}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('responseJson', responseJson)
+      this.setState({ GenderData: responseJson })
+    }).catch(err => console.log(err))
+  }
+
+  gatRegionData = roomId => {
+    const url = `http://ai.muzhiyun.cn/api/v1/roomRegion/regionSort?roomid=${roomId}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('responseJson', responseJson)
+      this.setState({ RegionData: responseJson })
+    }).catch(err => console.log(err))
+  }
+
+
   componentWillUnmount() {
     const { dispatch } = this.props;
     dispatch({
@@ -63,28 +151,6 @@ class Analysis extends Component {
     cancelAnimationFrame(this.reqRef);
     clearTimeout(this.timeoutId);
   }
-
-  getQueryString = (url, name) => {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-    var r = url.substr(1).match(reg);
-    if (r != null) return unescape(r[2]);
-    return null;
-  }
-
-
-  getTotalData = (timeType, startTime = '', endTime = '', orgId = '8EF2F2CE-6481-4C39-BE69-56F3DF7AED86') => {
-    const url = `http://studioapi.muzhiyun.cn/api/statistiDataGraphics/all/getStatistical?timeType=${timeType}&sourceType=1&id=${orgId}&startTime=${startTime}&endTime=${endTime}`
-    fetch(url, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-    .then(response => response.json())
-    .then(responseJson => {
-      console.log('responseJson',responseJson)
-      this.setState({ totalData: responseJson.data })
-    }).catch(err => console.log(err))
-  }
-
 
   handleChangeSalesType = e => {
     this.setState({
@@ -143,32 +209,12 @@ class Analysis extends Component {
   render() {
     const { rangePickerValue, salesType } = this.state;
     const { loading } = this.props;
-    const { timeType, totalData } = this.state;
+    const { currentDateData } = this.state;
     return (
       <GridContent>
         <React.Fragment>
           <Suspense fallback={<PageLoading />}>
-            <div>
-              <div className={styles.salesExtra}>
-                <Radio.Group value={timeType} onChange={this.handleSizeChange} style={{ marginBottom: 10 }}>
-                  <Radio.Button value="week">
-                    本周
-                  </Radio.Button>
-                  <Radio.Button value="month">
-                    本月
-                  </Radio.Button>
-                </Radio.Group>
-              </div>
-            <RangePicker
-              value={rangePickerValue}
-              onChange={this.handleRangePickerChange}
-              className="picker"
-            />
-          </div>
-          <br/>
-          </Suspense>
-          <Suspense fallback={<PageLoading />}>
-            <StorageCdnTransCode loading={loading} visitData={totalData} />
+            <CurrentDateData loading={loading} CurrentDateData={currentDateData}/>
           </Suspense>
           <Row
             gutter={24}
@@ -177,20 +223,12 @@ class Analysis extends Component {
           >
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <CostRatio
-                  salesType={salesType}
-                  loading={loading}
-                  salesPieData={totalData}
-                  handleChangeSalesType={this.handleChangeSalesType}
-                />
+                222
               </Suspense>
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <CostRank
-                  loading={loading}
-                  visitData2={totalData}
-                />
+                333
               </Suspense>
             </Col>
           </Row>
@@ -203,17 +241,17 @@ class Analysis extends Component {
           >
             <Col xl={6} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <Surplus surplusData={totalData} loading={loading}/>
+                4444
               </Suspense>
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <TheFiles myFiles={totalData} loading={loading}/>
+                555
               </Suspense>
             </Col>
             <Col xl={6} lg={24} md={24} sm={24} xs={24}>
               <Suspense fallback={null}>
-                <AuditFinals myAudit={totalData} loading={loading} />
+                666
               </Suspense>
             </Col>
           </Row>

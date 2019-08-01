@@ -68,7 +68,6 @@ const CostRank = ({ loading, visitData2 }) => (
         )
       )
     }
-
   </Card>
 );
 
