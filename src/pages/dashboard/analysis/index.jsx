@@ -191,9 +191,7 @@ class Analysis extends Component {
   handleSizeChange = e => {
     // console.log('e', e.target.value)
     this.setState({ timeType: e.target.value });
-    this.setState({
-      rangePickerValue: getTimeDistance(e.target.value),
-    });
+    this.setState({ rangePickerValue: getTimeDistance(e.target.value) });
     switch (e.target.value) {
       case 'month':
           this.getTotalData(2, '', '', this.state.organizationId)
