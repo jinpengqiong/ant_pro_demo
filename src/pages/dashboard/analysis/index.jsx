@@ -1,14 +1,13 @@
-import { Col, Row, DatePicker, Radio } from 'antd';
+import { Col, Row, DatePicker, Select } from 'antd';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import PageLoading from './components/PageLoading';
 import { getTimeDistance } from './utils/utils';
-import styles from './style.less';
 
-const { RangePicker } = DatePicker;
 
+const { Option } = Select;
 const DayLineBar = React.lazy(() => import('./components/DayLineBar'));
 const HourLineBar = React.lazy(() => import('./components/HourLineBar'));
 const RagionList = React.lazy(() => import('./components/RagionList'));
@@ -20,9 +19,6 @@ const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'))
 }))
 class Analysis extends Component {
   state = {
-    salesType: 'all',
-    rangePickerValue: getTimeDistance('month'),
-    timeType: 'month',
     roomId: '',
     totalCount: null,
     HoursData: null,
@@ -77,13 +73,38 @@ class Analysis extends Component {
     });
   }
 
+  componentWillUpdate(nextProps, nextState){
+    console.log('nextState', nextState)
+    if (nextState.roomId) {
+      this.gatTotalCount(nextState.roomId)
+      this.gatGenderData(nextState.roomId)
+      this.gatHoursData(nextState.roomId)
+      this.gatDayData(nextState.roomId)
+      this.gatRegionData(nextState.roomId)
+      this.timeoutId1 = setInterval(
+        () => {
+          this.gatTotalCount(nextState.roomId)
+          this.gatGenderData(nextState.roomId)
+        }, 5000)
+      this.timeoutId2 = setInterval(
+        () => {
+          this.gatHoursData(nextState.roomId)
+          this.gatRegionData(nextState.roomId)
+        }, 3600000)
+      this.timeoutId3 = setInterval(
+        () => {
+          this.gatDayData(nextState.roomId)
+        }, 86400000)
+    }
+  }
+
   getQueryString = (url, name) => {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = url.substr(1).match(reg);
     if (r != null) return unescape(r[2]);
     return null;
   }
-
+ew3
   gatTotalCount = roomId => {
     const url = `http://ai.muzhiyun.cn/api/v1/room/totalCount?room_id=${roomId}`
     fetch(url, {
@@ -186,76 +207,36 @@ class Analysis extends Component {
     clearTimeout(this.timeoutId3);
   }
 
-  handleChangeSalesType = e => {
-    this.setState({
-      salesType: e.target.value,
-    });
-  };
-
-  handleRangePickerChange = rangePickerValue => {
-    console.log('rangePickerValue', rangePickerValue)
-    if (JSON.stringify(rangePickerValue) === '[]') {
-      this.setState({ rangePickerValue: [] });
-      return
-    }
-    const startTime = rangePickerValue[0].format('YYYY/MM/DD')
-    const endTime = rangePickerValue[1].format('YYYY/MM/DD')
-    this.setState({ rangePickerValue, timeType: 3 });
-    this.getTotalData(3, startTime, endTime, this.state.organizationId)
-  };
-
-  isActive = type => {
-    const { rangePickerValue } = this.state;
-    const value = getTimeDistance(type);
-
-    if (!rangePickerValue[0] || !rangePickerValue[1]) {
-      return '';
-    }
-
-    if (
-      rangePickerValue[0].isSame(value[0], 'day') &&
-      rangePickerValue[1].isSame(value[1], 'day')
-    ) {
-      return styles.currentDate;
-    }
-
-    return '';
-  };
-
-  handleSizeChange = e => {
-    // console.log('e', e.target.value)
-    this.setState({ timeType: e.target.value });
-    this.setState({ rangePickerValue: getTimeDistance(e.target.value) });
-    switch (e.target.value) {
-      case 'month':
-          this.getTotalData(2, '', '', this.state.organizationId)
-        break
-      case 'week':
-          this.getTotalData(1, '', '', this.state.organizationId)
-        break
-      default:
-        return 1
-    }
+  handleSelectChange = value => {
+    console.log(`selected ${value}`);
+    this.setState({ roomId: value })
   }
 
+
   render() {
-    const { rangePickerValue, salesType } = this.state;
     const { loading } = this.props;
     const { totalCount, GenderData, HoursData, DayData, RegionData } = this.state;
     return (
       <GridContent>
         <React.Fragment>
+          <Select
+            placeholder="选择直播间"
+            style={{ width: 200 }}
+            onChange={this.handleSelectChange}>
+            <Option value="11111" key='11111'>11111</Option>
+            <Option value="22222" key='aaa'>aaa</Option>
+            <Option value="332808" key='aaass'>332808</Option>
+          </Select>
           <Row
             gutter={24}
             type="flex"
-            style={{ marginTop: 24 }}
           >
-            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
               <Suspense fallback={null}>
                 <CurrentDateData loading={loading} totalCount={totalCount} genderData={GenderData}/>
               </Suspense>
             </Col>
-            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
               <Suspense fallback={null}>
                 <HourLineBar loading={loading} HoursData={HoursData}/>
               </Suspense>
@@ -264,16 +245,13 @@ class Analysis extends Component {
           <Row
             gutter={24}
             type="flex"
-            style={{
-              marginTop: 24,
-            }}
-          >
-            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            >
+            <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
               <Suspense fallback={null}>
                 <DayLineBar loading={loading} DayData={DayData} />
               </Suspense>
             </Col>
-            <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+            <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
               <Suspense fallback={null}>
                 <RagionList loading={loading} RegionData={RegionData}/>
               </Suspense>

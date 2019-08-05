@@ -42,8 +42,7 @@ const RagionList = ({ loading, RegionData }) => (
     bordered={false}
     title="互动区域排行TOP10"
     style={{
-      marginTop: 32,
-      height:'100%',
+      height: '100%',
     }}
   >
     <Table
