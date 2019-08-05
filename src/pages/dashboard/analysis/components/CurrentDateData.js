@@ -14,28 +14,6 @@ const CurrentDateData = ({ loading, totalCount, genderData }) => (
     }}
   >
       <div>
-          <div className={styles.myBox}>
-              <div>
-                <Pie
-                color="#975FE4"
-                percent={ genderData ? (genderData[0].value*100).toFixed(2) : 0 }
-                subTitle="男"
-                total={ genderData ? (genderData[0].value*100).toFixed(2)+'%' : 0 }
-                height={180} />
-              </div>
-              <div>
-                <Pie
-                color="orange"
-                percent={ genderData ? (genderData[1].value*100).toFixed(2) : 0 }
-                subTitle="女"
-                total={ genderData ? (genderData[1].value*100).toFixed(2)+'%' : 0 }
-                height={180} />
-              </div>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
           <div className={styles.box2}>
                 <div>
                   <p className={styles.myTitle}>在线数</p>
@@ -63,6 +41,26 @@ const CurrentDateData = ({ loading, totalCount, genderData }) => (
                   { totalCount ? totalCount.like_count : 0}
                 </p>
             </div>
+          </div>
+          <br/>
+          <br/>
+          <div className={styles.myBox}>
+              <div>
+                <Pie
+                color="#975FE4"
+                percent={ genderData ? (genderData[0].value*100).toFixed(2) : 0 }
+                subTitle="男"
+                total={ genderData ? (genderData[0].value*100).toFixed(2)+'%' : 0 }
+                height={180} />
+              </div>
+              <div>
+                <Pie
+                color="orange"
+                percent={ genderData ? (genderData[1].value*100).toFixed(2) : 0 }
+                subTitle="女"
+                total={ genderData ? (genderData[1].value*100).toFixed(2)+'%' : 0 }
+                height={180} />
+              </div>
           </div>
       </div>
   </Card>
