@@ -6,7 +6,7 @@ const columns = [
   //   title: '排名',
   //   dataIndex: 'rank',
   //   key: 'rank',
-  //   render: text => <a href="javascript:;">{text}</a>,
+  //   render: text => <div style={{width: '5px', borderRadius: '50%' }}></div>,
   // },
   {
     title: '省份',
@@ -46,7 +46,12 @@ const RagionList = ({ loading, RegionData }) => (
       height:'100%',
     }}
   >
-    <Table columns={columns} dataSource={RegionData ? RegionData : null} pagination={false}/>
+    <Table
+      columns={columns}
+      dataSource={RegionData ? RegionData : null}
+      pagination={false}
+      size="small"
+      rowKey={record => record.userCount}/>
   </Card>
 );
 

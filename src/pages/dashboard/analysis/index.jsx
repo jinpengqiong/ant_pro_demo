@@ -10,8 +10,6 @@ import styles from './style.less';
 const { RangePicker } = DatePicker;
 
 const DayLineBar = React.lazy(() => import('./components/DayLineBar'));
-const TheFiles = React.lazy(() => import('./components/TheFiles'));
-const CostRank = React.lazy(() => import('./components/CostRank'));
 const HourLineBar = React.lazy(() => import('./components/HourLineBar'));
 const RagionList = React.lazy(() => import('./components/RagionList'));
 const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'));
@@ -171,7 +169,7 @@ class Analysis extends Component {
     })
     .then(response => response.json())
     .then(responseJson => {
-      console.log('RegionData', responseJson)
+      // console.log('RegionData', responseJson)
       this.setState({ RegionData: responseJson })
     }).catch(err => console.log(err))
   }
