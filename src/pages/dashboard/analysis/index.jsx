@@ -74,27 +74,9 @@ class Analysis extends Component {
   }
 
   componentWillUpdate(nextProps, nextState){
-    console.log('nextState', nextState)
-    if (nextState.roomId) {
-      this.gatTotalCount(nextState.roomId)
-      this.gatGenderData(nextState.roomId)
-      this.gatHoursData(nextState.roomId)
-      this.gatDayData(nextState.roomId)
-      this.gatRegionData(nextState.roomId)
-      this.timeoutId1 = setInterval(
-        () => {
-          this.gatTotalCount(nextState.roomId)
-          this.gatGenderData(nextState.roomId)
-        }, 5000)
-      this.timeoutId2 = setInterval(
-        () => {
-          this.gatHoursData(nextState.roomId)
-          this.gatRegionData(nextState.roomId)
-        }, 3600000)
-      this.timeoutId3 = setInterval(
-        () => {
-          this.gatDayData(nextState.roomId)
-        }, 86400000)
+    if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)){
+      console.log('nextState', nextState)
+      console.log('state', this.state)
     }
   }
 
