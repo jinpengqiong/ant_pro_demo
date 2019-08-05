@@ -48,25 +48,25 @@ class Analysis extends Component {
       roomId = this.getQueryString(window.location.search, 'roomId')
       this.setState({ roomId })
     }
-    if (332808) {
-      this.gatTotalCount(332808)
-      this.gatGenderData(332808)
-      this.gatHoursData(332808)
-      this.gatDayData(332808)
-      this.gatRegionData(332808)
+    if (roomId) {
+      this.gatTotalCount(roomId)
+      this.gatGenderData(roomId)
+      this.gatHoursData(roomId)
+      this.gatDayData(roomId)
+      this.gatRegionData(roomId)
       this.timeoutId1 = setInterval(
         () => {
-          this.gatTotalCount(332808)
-          this.gatGenderData(332808)
+          this.gatTotalCount(roomId)
+          this.gatGenderData(roomId)
         }, 5000)
       this.timeoutId2 = setInterval(
         () => {
-          this.gatHoursData(332808)
-          this.gatRegionData(332808)
+          this.gatHoursData(roomId)
+          this.gatRegionData(roomId)
         }, 3600000)
       this.timeoutId3 = setInterval(
         () => {
-          this.gatDayData(332808)
+          this.gatDayData(roomId)
         }, 86400000)
     }
     const { dispatch } = this.props;
