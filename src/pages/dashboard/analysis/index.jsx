@@ -159,11 +159,11 @@ class Analysis extends Component {
                   </Radio.Button>
                 </Radio.Group>
               </div>
-            <RangePicker
-              value={rangePickerValue}
-              onChange={this.handleRangePickerChange}
-              className="picker"
-            />
+              <RangePicker
+                value={rangePickerValue}
+                onChange={this.handleRangePickerChange}
+                dropdownClassName={styles.thePicker}
+                />
           </div>
           <br/>
           </Suspense>

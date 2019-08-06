@@ -148,9 +148,15 @@
   margin-left: 8px;
   color: @heading-color;
 }
-.picker {
-  width:256
+
+.thePicker{
+  :global {
+    .ant-calendar-range {
+      width:375px;
+    }
+  }
 }
+
 
 @media screen and (max-width: @screen-lg) {
 
@@ -177,9 +183,9 @@
   .salesExtra {
     display:flex;
     justify-content: center;
-    .picker {
-      width: 100%
-    }
+  }
+  .thePicker{
+    width: 10
   }
   .salesCard {
     :global {
