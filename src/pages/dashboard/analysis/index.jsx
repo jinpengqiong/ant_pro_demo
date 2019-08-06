@@ -1,10 +1,9 @@
-import { Col, Row, DatePicker, Select } from 'antd';
+import { Col, Row, Select } from 'antd';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import PageLoading from './components/PageLoading';
-import { getTimeDistance } from './utils/utils';
 
 
 const { Option } = Select;
@@ -25,6 +24,8 @@ class Analysis extends Component {
     DayData: null,
     GenderData: null,
     RegionData: null,
+    roomIds: null,
+    orgId:''
   };
 
   reqRef = 0;
@@ -34,36 +35,46 @@ class Analysis extends Component {
   timeoutId3= 0;
 
 
-  componentDidMount() {
-    let roomId
+  async componentDidMount() {
+    let orgId
+    let roomId = []
     if (window.plus) {
       const url = window.plus.webView.currentWebview().getUrl()
-      roomId = this.getQueryString(url, 'roomId')
-      this.setState({ roomId })
+      orgId = this.getQueryString(url, 'orgId')
+      this.setState({ orgId })
+      await this.getRoomIds(orgId)
     } else if (window) {
-      roomId = this.getQueryString(window.location.search, 'roomId')
-      this.setState({ roomId })
+      orgId = this.getQueryString(window.location.search, 'orgId')
+      this.setState({ orgId })
+      await this.getRoomIds(orgId)
+      console.log('state123', this.state.roomIds)
     }
-    if (roomId) {
-      this.gatTotalCount(roomId)
-      this.gatGenderData(roomId)
-      this.gatHoursData(roomId)
-      this.gatDayData(roomId)
-      this.gatRegionData(roomId)
-      this.timeoutId1 = setInterval(
-        () => {
-          this.gatTotalCount(roomId)
-          this.gatGenderData(roomId)
-        }, 5000)
-      this.timeoutId2 = setInterval(
-        () => {
-          this.gatHoursData(roomId)
-          this.gatRegionData(roomId)
-        }, 3600000)
-      this.timeoutId3 = setInterval(
-        () => {
-          this.gatDayData(roomId)
-        }, 86400000)
+    if (this.state.roomIds) {
+      this.state.roomIds.map(
+        item => {
+          roomId.push(item.room_id)
+        }
+      )
+      console.log('roomId', roomId.join(','))
+      // this.gatTotalCount(roomId)
+      // this.gatGenderData(roomId)
+      // this.gatHoursData(roomId)
+      // this.gatDayData(roomId)
+      // this.gatRegionData(roomId)
+      // this.timeoutId1 = setInterval(
+      //   () => {
+      //     this.gatTotalCount(roomId)
+      //     this.gatGenderData(roomId)
+      //   }, 5000)
+      // this.timeoutId2 = setInterval(
+      //   () => {
+      //     this.gatHoursData(roomId)
+      //     this.gatRegionData(roomId)
+      //   }, 3600000)
+      // this.timeoutId3 = setInterval(
+      //   () => {
+      //     this.gatDayData(roomId)
+      //   }, 86400000)
     }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -77,6 +88,25 @@ class Analysis extends Component {
     if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)){
       console.log('nextState', nextState)
       console.log('state', this.state)
+      // this.gatTotalCount(roomId)
+      // this.gatGenderData(roomId)
+      // this.gatHoursData(roomId)
+      // this.gatDayData(roomId)
+      // this.gatRegionData(roomId)
+      // this.timeoutId1 = setInterval(
+      //   () => {
+      //     this.gatTotalCount(roomId)
+      //     this.gatGenderData(roomId)
+      //   }, 5000)
+      // this.timeoutId2 = setInterval(
+      //   () => {
+      //     this.gatHoursData(roomId)
+      //     this.gatRegionData(roomId)
+      //   }, 3600000)
+      // this.timeoutId3 = setInterval(
+      //   () => {
+      //     this.gatDayData(roomId)
+      //   }, 86400000)
     }
   }
 
@@ -86,7 +116,7 @@ class Analysis extends Component {
     if (r != null) return unescape(r[2]);
     return null;
   }
-ew3
+
   gatTotalCount = roomId => {
     const url = `http://ai.muzhiyun.cn/api/v1/room/totalCount?room_id=${roomId}`
     fetch(url, {
@@ -189,6 +219,21 @@ ew3
     clearTimeout(this.timeoutId3);
   }
 
+  getRoomIds = orgId => {
+    const url = `http://ai.muzhiyun.cn/api/v1/organization?org_id=${orgId}`
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log('getRoomIds', responseJson)
+      this.setState({ roomIds: responseJson.response })
+    }).catch(err => console.log(err))
+  }
+
   handleSelectChange = value => {
     console.log(`selected ${value}`);
     this.setState({ roomId: value })
@@ -206,9 +251,13 @@ ew3
             placeholder="选择直播间"
             style={{ width: 200 }}
             onChange={this.handleSelectChange}>
-            <Option value="11111" key='11111'>11111</Option>
-            <Option value="22222" key='aaa'>aaa</Option>
-            <Option value="332808" key='aaass'>332808</Option>
+            {
+              this.state.roomIds
+              &&
+              this.state.roomIds.map(
+                (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
+              )
+            }
           </Select>
           <Row
             gutter={24}
