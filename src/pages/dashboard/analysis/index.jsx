@@ -25,9 +25,11 @@ class Analysis extends Component {
     rangePickerValue: '',
     timeType: '7days',
     roomId: '',
+    allRoomId: '',
     totalCount: null,
     HoursData: null,
     DayData: null,
+    customData: null,
     GenderData: null,
     RegionData: null,
     roomIds: null,
@@ -58,12 +60,12 @@ class Analysis extends Component {
     if (this.state.roomIds) {
       this.state.roomIds.map(
         item => {
-          roomId.push(item.room_id)
+          roomId.push((item.room_id + 1982) * 168)
         }
       )
       console.log('roomId', roomId.join(','))
-      this.setState({ roomId: roomId.join(',') })
-      // this.setAllIntervals(roomId)
+      this.setState({ roomId: roomId.join(','), allRoomId: roomId.join(',')})
+      this.setAllIntervals(roomId)
     }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -93,25 +95,28 @@ class Analysis extends Component {
   }
 
   setAllIntervals = ID => {
+    clearTimeout(this.timeoutId1);
+    clearTimeout(this.timeoutId2);
+    clearTimeout(this.timeoutId3);
     this.gatTotalCount(ID)
-      this.gatGenderData(ID)
-      this.gatHoursData(ID)
-      this.gatDayData(ID)
-      this.gatRegionData(ID)
-      this.timeoutId1 = setInterval(
-        () => {
-          this.gatTotalCount(ID)
-          this.gatGenderData(ID)
-        }, 5000)
-      this.timeoutId2 = setInterval(
-        () => {
-          this.gatHoursData(ID)
-          this.gatRegionData(ID)
-        }, 3600000)
-      this.timeoutId3 = setInterval(
-        () => {
-          this.gatDayData(ID)
-        }, 86400000)
+    this.gatGenderData(ID)
+    this.gatHoursData(ID)
+    this.gatDayData(ID)
+    this.gatRegionData(ID)
+    this.timeoutId1 = setInterval(
+      () => {
+        this.gatTotalCount(ID)
+        this.gatGenderData(ID)
+      }, 5000)
+    this.timeoutId2 = setInterval(
+      () => {
+        this.gatHoursData(ID)
+        this.gatRegionData(ID)
+      }, 3600000)
+    this.timeoutId3 = setInterval(
+      () => {
+        this.gatDayData(ID)
+      }, 86400000)
   }
 
   getQueryString = (url, name) => {
@@ -185,7 +190,12 @@ class Analysis extends Component {
             arr3.push({ x: item.x, y: item.y3 })
           },
         )
-        this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
+        if (this.state.timeType === 'customized') {
+          console.log('aaaa', { data1: arr1, data2: arr2, data3: arr3 })
+          this.setState({ customData: { data1: arr1, data2: arr2, data3: arr3 } })
+        } else {
+          this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
+        }
       }
     }).catch(err => console.log(err))
   }
@@ -199,7 +209,7 @@ class Analysis extends Component {
     .then(response => response.json())
     .then(responseJson => {
       // console.log('responseJson', responseJson)
-      this.setState({ GenderData: responseJson })
+      this.setState({ GenderData: responseJson.response })
     }).catch(err => console.log(err))
   }
 
@@ -234,6 +244,7 @@ class Analysis extends Component {
   handleSelectChange = value => {
     console.log(`selected ${value}`);
     this.setState({ roomId: value })
+    this.setAllIntervals(value)
   }
 
   handleSizeChange = e => {
@@ -246,6 +257,9 @@ class Analysis extends Component {
       case '7days':
           this.gatDayData(this.state.roomId)
         break
+      case 'customized':
+          this.setState({ customData: null })
+        break
       default:
         return '7days'
     }
@@ -253,6 +267,7 @@ class Analysis extends Component {
 
   handleRangePickerChange = rangePickerValue => {
     console.log('rangePickerValue', rangePickerValue)
+    clearTimeout(this.timeoutId3);
     if (JSON.stringify(rangePickerValue) === '[]') {
       this.setState({ rangePickerValue: [] });
       return
@@ -266,7 +281,7 @@ class Analysis extends Component {
 
   render() {
     const { loading } = this.props;
-    const { totalCount, GenderData, HoursData, DayData, RegionData, timeType, roomId } = this.state;
+    const { totalCount, GenderData, HoursData, DayData, RegionData, customData, timeType, roomId, allRoomId } = this.state;
     return (
       <GridContent>
         <React.Fragment>
@@ -275,14 +290,14 @@ class Analysis extends Component {
               <Select
                 placeholder="选择直播间"
                 style={{ width: 200 }}
-                defaultValue={roomId}
+                defaultValue={allRoomId}
                 onChange={this.handleSelectChange}>
-                  <Option value={roomId} key={roomId}>所有直播间</Option>
+                  <Option value={allRoomId} key={allRoomId}>所有直播间</Option>
                   {
                     this.state.roomIds
                     &&
                     this.state.roomIds.map(
-                      (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
+                      (v, i) => (<Option value={(v.room_id + 1982) * 168} key={(v.room_id + 1982) * 168}>{v.channel_name}</Option>)
                     )
                   }
               </Select>
@@ -339,7 +354,7 @@ class Analysis extends Component {
                 this.state.timeType === 'customized'
                 &&
                   <Suspense fallback={null}>
-                    <CustomizedBar loading={loading} DayData={DayData} />
+                    <CustomizedBar loading={loading} customData={customData} />
                   </Suspense>
               }
             </Col>

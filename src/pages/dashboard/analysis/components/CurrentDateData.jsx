@@ -2,8 +2,12 @@ import { Card } from 'antd';
 import React from 'react';
 import { Pie } from './Charts';
 import styles from './_currentDateData.less';
+import {isVoidObject} from '../utils/utils'
 
-const CurrentDateData = ({ loading, totalCount, genderData }) => (
+
+const CurrentDateData = ({ loading, totalCount, genderData }) => {
+  console.log('genderData', genderData)
+  return (
   <Card
     loading={loading}
     // className={styles.salesCard}
@@ -48,22 +52,22 @@ const CurrentDateData = ({ loading, totalCount, genderData }) => (
               <div>
                 <Pie
                 color="#975FE4"
-                percent={ totalCount && !genderData.error_code ? (genderData[0].value*100).toFixed(2) : 0 }
+                percent={ isVoidObject(genderData) && !genderData.error_code ? (genderData[0].value*100).toFixed(2) : 0 }
                 subTitle="男"
-                total={ totalCount && !genderData.error_code ? (genderData[0].value*100).toFixed(2)+'%' : 0 }
+                total={ isVoidObject(genderData) && !genderData.error_code ? (genderData[0].value*100).toFixed(2)+'%' : 0 }
                 height={180} />
               </div>
               <div>
                 <Pie
                 color="orange"
-                percent={ totalCount && !genderData.error_code ? (genderData[1].value*100).toFixed(2) : 0 }
+                percent={ isVoidObject(genderData) && !genderData.error_code ? (genderData[1].value*100).toFixed(2) : 0 }
                 subTitle="女"
-                total={ totalCount && !genderData.error_code ? (genderData[1].value*100).toFixed(2)+'%' : 0 }
+                total={ isVoidObject(genderData) && !genderData.error_code ? (genderData[1].value*100).toFixed(2)+'%' : 0 }
                 height={180} />
               </div>
           </div>
       </div>
   </Card>
-);
+)};
 
 export default CurrentDateData;

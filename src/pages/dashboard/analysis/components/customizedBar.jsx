@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import React from 'react';
 import { MiniArea } from './Charts';
 
-const CumstomizedBar = ({ loading, DayData }) => (
+const CumstomizedBar = ({ loading, customData }) => (
   <Card
     loading={loading}
     bordered={false}
@@ -12,11 +12,11 @@ const CumstomizedBar = ({ loading, DayData }) => (
     }}
   >
     <h3>用户数</h3>
-    <MiniArea line color="#cceafe" height={45} data={DayData && !DayData.error_code ? DayData.data1 : null } />
+    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data1 : null } />
     <h3>消息数</h3>
-    <MiniArea line color="#cceafe" height={45} data={DayData && !DayData.error_code ? DayData.data2 : null } />
+    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data2 : null } />
     <h3>点赞数</h3>
-    <MiniArea line color="#cceafe" height={45} data={DayData && !DayData.error_code ? DayData.data3 : null } />
+    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data3 : null } />
   </Card>
 );
 
