@@ -21,7 +21,6 @@ const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'))
 }))
 class Analysis extends Component {
   state = {
-    salesType: 'all',
     rangePickerValue: '',
     timeType: '7days',
     roomId: '',
@@ -48,11 +47,11 @@ class Analysis extends Component {
     let roomId = []
     if (window.plus) {
       const url = window.plus.webView.currentWebview().getUrl()
-      orgId = this.getQueryString(url, 'orgId')
+      orgId = this.getQueryString(url, 'org_Id')
       this.setState({ orgId })
       await this.getRoomIds(orgId)
     } else if (window) {
-      orgId = this.getQueryString(window.location.search, 'orgId')
+      orgId = this.getQueryString(window.location.search, 'org_Id')
       this.setState({ orgId })
       await this.getRoomIds(orgId)
       // console.log('state123', this.state.roomIds)
@@ -191,7 +190,7 @@ class Analysis extends Component {
           },
         )
         if (this.state.timeType === 'customized') {
-          console.log('aaaa', { data1: arr1, data2: arr2, data3: arr3 })
+          // console.log('aaaa', { data1: arr1, data2: arr2, data3: arr3 })
           this.setState({ customData: { data1: arr1, data2: arr2, data3: arr3 } })
         } else {
           this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
