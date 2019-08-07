@@ -56,25 +56,7 @@ class Analysis extends Component {
         }
       )
       console.log('roomId', roomId.join(','))
-      // this.gatTotalCount(roomId)
-      // this.gatGenderData(roomId)
-      // this.gatHoursData(roomId)
-      // this.gatDayData(roomId)
-      // this.gatRegionData(roomId)
-      // this.timeoutId1 = setInterval(
-      //   () => {
-      //     this.gatTotalCount(roomId)
-      //     this.gatGenderData(roomId)
-      //   }, 5000)
-      // this.timeoutId2 = setInterval(
-      //   () => {
-      //     this.gatHoursData(roomId)
-      //     this.gatRegionData(roomId)
-      //   }, 3600000)
-      // this.timeoutId3 = setInterval(
-      //   () => {
-      //     this.gatDayData(roomId)
-      //   }, 86400000)
+      this.setAllIntervals(roomId)
     }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -84,30 +66,45 @@ class Analysis extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState){
-    if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)){
+  componentWillUpdate(nextProps, nextState) {
+    if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)) {
       console.log('nextState', nextState)
       console.log('state', this.state)
-      // this.gatTotalCount(roomId)
-      // this.gatGenderData(roomId)
-      // this.gatHoursData(roomId)
-      // this.gatDayData(roomId)
-      // this.gatRegionData(roomId)
-      // this.timeoutId1 = setInterval(
-      //   () => {
-      //     this.gatTotalCount(roomId)
-      //     this.gatGenderData(roomId)
-      //   }, 5000)
-      // this.timeoutId2 = setInterval(
-      //   () => {
-      //     this.gatHoursData(roomId)
-      //     this.gatRegionData(roomId)
-      //   }, 3600000)
-      // this.timeoutId3 = setInterval(
-      //   () => {
-      //     this.gatDayData(roomId)
-      //   }, 86400000)
+      // this.setAllIntervals(nextState.roomId)
     }
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'dashboardAnalysis/clear',
+    });
+    cancelAnimationFrame(this.reqRef);
+    clearTimeout(this.timeoutId1);
+    clearTimeout(this.timeoutId2);
+    clearTimeout(this.timeoutId3);
+  }
+
+  setAllIntervals = ID => {
+    this.gatTotalCount(ID)
+      this.gatGenderData(ID)
+      this.gatHoursData(ID)
+      this.gatDayData(ID)
+      this.gatRegionData(ID)
+      this.timeoutId1 = setInterval(
+        () => {
+          this.gatTotalCount(ID)
+          this.gatGenderData(ID)
+        }, 5000)
+      this.timeoutId2 = setInterval(
+        () => {
+          this.gatHoursData(ID)
+          this.gatRegionData(ID)
+        }, 3600000)
+      this.timeoutId3 = setInterval(
+        () => {
+          this.gatDayData(ID)
+        }, 86400000)
   }
 
   getQueryString = (url, name) => {
@@ -205,18 +202,6 @@ class Analysis extends Component {
       // console.log('RegionData', responseJson)
       this.setState({ RegionData: responseJson })
     }).catch(err => console.log(err))
-  }
-
-
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'dashboardAnalysis/clear',
-    });
-    cancelAnimationFrame(this.reqRef);
-    clearTimeout(this.timeoutId1);
-    clearTimeout(this.timeoutId2);
-    clearTimeout(this.timeoutId3);
   }
 
   getRoomIds = orgId => {
