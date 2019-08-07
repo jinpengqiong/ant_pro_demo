@@ -8,15 +8,15 @@ const HourLineBar = ({ loading, HoursData }) => (
     bordered={false}
     title="24小时实时数据"
     style={{
-      height: '100%',
+      height: '88%',
     }}
   >
     <h3>用户数</h3>
-    <MiniArea line color="#cceafe" height={45} data={HoursData ? HoursData.data1 : null } />
+    <MiniArea line color="#cceafe" height={45} data={ HoursData && !HoursData.error_code ? HoursData.data1 : null } />
     <h3>消息数</h3>
-    <MiniArea line color="#cceafe" height={45} data={HoursData ? HoursData.data2 : null } />
+    <MiniArea line color="#cceafe" height={45} data={ HoursData && !HoursData.error_code ? HoursData.data2 : null } />
     <h3>点赞数</h3>
-    <MiniArea line color="#cceafe" height={45} data={HoursData ? HoursData.data3 : null } />
+    <MiniArea line color="#cceafe" height={45} data={ HoursData && !HoursData.error_code ? HoursData.data3 : null } />
   </Card>
 );
 

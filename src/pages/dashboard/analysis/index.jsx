@@ -1,14 +1,17 @@
-import { Col, Row, Select } from 'antd';
+import { Col, Row, Select, DatePicker, Radio } from 'antd';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import { connect } from 'dva';
 import PageLoading from './components/PageLoading';
+import styles from './style.less';
+import { getTimeDistance } from './utils/utils';
 
-
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 const DayLineBar = React.lazy(() => import('./components/DayLineBar'));
 const HourLineBar = React.lazy(() => import('./components/HourLineBar'));
+const CustomizedBar = React.lazy(() => import('./components/customizedBar'));
 const RagionList = React.lazy(() => import('./components/RagionList'));
 const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'));
 
@@ -18,6 +21,9 @@ const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'))
 }))
 class Analysis extends Component {
   state = {
+    salesType: 'all',
+    rangePickerValue: '',
+    timeType: '7days',
     roomId: '',
     totalCount: null,
     HoursData: null,
@@ -25,7 +31,7 @@ class Analysis extends Component {
     GenderData: null,
     RegionData: null,
     roomIds: null,
-    orgId:''
+    orgId: '',
   };
 
   reqRef = 0;
@@ -47,7 +53,7 @@ class Analysis extends Component {
       orgId = this.getQueryString(window.location.search, 'orgId')
       this.setState({ orgId })
       await this.getRoomIds(orgId)
-      console.log('state123', this.state.roomIds)
+      // console.log('state123', this.state.roomIds)
     }
     if (this.state.roomIds) {
       this.state.roomIds.map(
@@ -56,7 +62,8 @@ class Analysis extends Component {
         }
       )
       console.log('roomId', roomId.join(','))
-      this.setAllIntervals(roomId)
+      this.setState({ roomId: roomId.join(',') })
+      // this.setAllIntervals(roomId)
     }
     const { dispatch } = this.props;
     this.reqRef = requestAnimationFrame(() => {
@@ -139,23 +146,27 @@ class Analysis extends Component {
     })
     .then(response => response.json())
     .then(responseJson => {
-      const arr1 = []
-      const arr2 = []
-      const arr3 = []
-      responseJson.response.forEach(
-        (item, i) => {
-          arr1.push({ x: item.x, y: item.y1 })
-          arr2.push({ x: item.x, y: item.y2 })
-          arr3.push({ x: item.x, y: item.y3 })
-        },
+      if (!responseJson.error_code) {
+        const arr1 = []
+        const arr2 = []
+        const arr3 = []
+        responseJson.response.forEach(
+          (item, i) => {
+            arr1.push({ x: item.x, y: item.y1 })
+            arr2.push({ x: item.x, y: item.y2 })
+            arr3.push({ x: item.x, y: item.y3 })
+          },
       )
       this.setState({ HoursData: { data1: arr1, data2: arr2, data3: arr3 } })
+      }
     }).catch(err => console.log(err))
   }
 
-  gatDayData = roomId => {
-    const tsStart = parseInt((new Date(new Date(new Date().getTime() - 7*24*60*60*1000).toLocaleDateString()).getTime())/1000);
-    const tsEnd = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
+  gatDayData = (
+                roomId,
+                tsStart = parseInt((new Date(new Date(new Date().getTime() - 7*24*60*60*1000).toLocaleDateString()).getTime())/1000),
+                tsEnd = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
+                ) => {
     const url = `http://ai.muzhiyun.cn/api/v1/room/listDay?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
     fetch(url, {
       method: 'GET',
@@ -163,18 +174,19 @@ class Analysis extends Component {
     })
     .then(response => response.json())
     .then(responseJson => {
-      const arr1 = []
-      const arr2 = []
-      const arr3 = []
-      responseJson.response.forEach(
-        (item, i) => {
-          arr1.push({ x: item.x, y: item.y1 })
-          arr2.push({ x: item.x, y: item.y2 })
-          arr3.push({ x: item.x, y: item.y3 })
-        },
-      )
-      // console.log('responseJson', { data1: arr1, data2: arr2, data3: arr3 } )
-      this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
+      if (!responseJson.error_code) {
+        const arr1 = []
+        const arr2 = []
+        const arr3 = []
+        responseJson.response.forEach(
+          (item, i) => {
+            arr1.push({ x: item.x, y: item.y1 })
+            arr2.push({ x: item.x, y: item.y2 })
+            arr3.push({ x: item.x, y: item.y3 })
+          },
+        )
+        this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
+      }
     }).catch(err => console.log(err))
   }
 
@@ -224,26 +236,55 @@ class Analysis extends Component {
     this.setState({ roomId: value })
   }
 
+  handleSizeChange = e => {
+    // console.log('e', e.target.value)
+    this.setState({ timeType: e.target.value });
+    switch (e.target.value) {
+      case '1day':
+          this.gatHoursData(this.state.roomId)
+        break
+      case '7days':
+          this.gatDayData(this.state.roomId)
+        break
+      default:
+        return '7days'
+    }
+  }
+
+  handleRangePickerChange = rangePickerValue => {
+    console.log('rangePickerValue', rangePickerValue)
+    if (JSON.stringify(rangePickerValue) === '[]') {
+      this.setState({ rangePickerValue: [] });
+      return
+    }
+    const startTime = rangePickerValue[0].unix()
+    const endTime = rangePickerValue[1].unix()
+    console.log('startTime', startTime)
+    console.log('endTime', endTime)
+    this.gatDayData(this.state.roomId, startTime, endTime)
+  };
 
   render() {
     const { loading } = this.props;
-    const { totalCount, GenderData, HoursData, DayData, RegionData } = this.state;
+    const { totalCount, GenderData, HoursData, DayData, RegionData, timeType } = this.state;
     return (
       <GridContent>
         <React.Fragment>
-          选择直播间：{' '}
-          <Select
-            placeholder="选择直播间"
-            style={{ width: 200 }}
-            onChange={this.handleSelectChange}>
-            {
-              this.state.roomIds
-              &&
-              this.state.roomIds.map(
-                (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
-              )
-            }
-          </Select>
+            <Suspense fallback={<PageLoading />}>
+              选择直播间：{' '}
+              <Select
+                placeholder="选择直播间"
+                style={{ width: 200 }}
+                onChange={this.handleSelectChange}>
+                {
+                  this.state.roomIds
+                  &&
+                  this.state.roomIds.map(
+                    (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
+                  )
+                }
+              </Select>
+            </Suspense>
           <Row
             gutter={24}
             type="flex"
@@ -254,20 +295,57 @@ class Analysis extends Component {
               </Suspense>
             </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
-              <Suspense fallback={null}>
-                <HourLineBar loading={loading} HoursData={HoursData}/>
-              </Suspense>
+              <div className={styles.salesExtra}>
+                <Radio.Group value={timeType} onChange={this.handleSizeChange} style={{ marginBottom: 10 }}>
+                  <Radio.Button value="1day">
+                    一天
+                  </Radio.Button>
+                  <Radio.Button value="7days">
+                    七天
+                  </Radio.Button>
+                  <Radio.Button value="customized">
+                    自定义
+                  </Radio.Button>
+                </Radio.Group>
+              </div>
+              <div>
+                {
+                  this.state.timeType === 'customized'
+                  &&
+                  <RangePicker
+                  onChange={this.handleRangePickerChange}
+                  dropdownClassName={styles.thePicker}
+                  />
+                }
+              </div>
+              <br/>
+              {
+                this.state.timeType === '1day'
+                &&
+                  <Suspense fallback={null}>
+                    <HourLineBar loading={loading} HoursData={HoursData}/>
+                  </Suspense>
+              }
+              {
+                this.state.timeType === '7days'
+                &&
+                  <Suspense fallback={null}>
+                    <DayLineBar loading={loading} DayData={DayData} />
+                  </Suspense>
+              }
+              {
+                this.state.timeType === 'customized'
+                &&
+                  <Suspense fallback={null}>
+                    <CustomizedBar loading={loading} DayData={DayData} />
+                  </Suspense>
+              }
             </Col>
           </Row>
           <Row
             gutter={24}
             type="flex"
             >
-            <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
-              <Suspense fallback={null}>
-                <DayLineBar loading={loading} DayData={DayData} />
-              </Suspense>
-            </Col>
             <Col xl={12} lg={24} md={24} sm={24} xs={24} style={{ marginTop: 24 }}>
               <Suspense fallback={null}>
                 <RagionList loading={loading} RegionData={RegionData}/>

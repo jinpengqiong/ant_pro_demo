@@ -2,13 +2,13 @@ import { Card } from 'antd';
 import React from 'react';
 import { MiniArea } from './Charts';
 
-const HourLineBar = ({ loading, DayData }) => (
+const CumstomizedBar = ({ loading, DayData }) => (
   <Card
     loading={loading}
     bordered={false}
-    title="7日变化趋势"
+    title="自定义时间间隔"
     style={{
-      height: '88%',
+      height: '80%',
     }}
   >
     <h3>用户数</h3>
@@ -20,4 +20,4 @@ const HourLineBar = ({ loading, DayData }) => (
   </Card>
 );
 
-export default HourLineBar;
+export default CumstomizedBar;

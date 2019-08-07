@@ -45,3 +45,11 @@ export function getTimeDistance(type) {
 
   return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
 }
+
+export function isVoidObject(obj) {
+  if (obj) {
+    if (JSON.stringify(obj) === '{}') return false;
+    if (JSON.stringify(obj) === '[]') return false;
+    return true
+  }
+}

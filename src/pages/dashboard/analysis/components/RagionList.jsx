@@ -47,7 +47,7 @@ const RagionList = ({ loading, RegionData }) => (
   >
     <Table
       columns={columns}
-      dataSource={RegionData ? RegionData : null}
+      dataSource={RegionData && !RegionData.error_code ? RegionData : null}
       pagination={false}
       size="small"
       rowKey={record => record.userCount}/>
