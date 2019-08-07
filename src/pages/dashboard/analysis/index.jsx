@@ -35,7 +35,7 @@ class Analysis extends Component {
 
 
   componentDidMount() {
-    console.log('location', this.getQueryString('organizationId'))
+    // console.log('location', this.getQueryString('organizationId'))
     let organizationId
     if (window.plus) {
       const url = window.plus.webView.currentWebview().getUrl()
