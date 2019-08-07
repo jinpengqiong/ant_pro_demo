@@ -266,7 +266,7 @@ class Analysis extends Component {
 
   render() {
     const { loading } = this.props;
-    const { totalCount, GenderData, HoursData, DayData, RegionData, timeType } = this.state;
+    const { totalCount, GenderData, HoursData, DayData, RegionData, timeType, roomId } = this.state;
     return (
       <GridContent>
         <React.Fragment>
@@ -275,14 +275,16 @@ class Analysis extends Component {
               <Select
                 placeholder="选择直播间"
                 style={{ width: 200 }}
+                defaultValue={roomId}
                 onChange={this.handleSelectChange}>
-                {
-                  this.state.roomIds
-                  &&
-                  this.state.roomIds.map(
-                    (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
-                  )
-                }
+                  <Option value={roomId} key={roomId}>所有直播间</Option>
+                  {
+                    this.state.roomIds
+                    &&
+                    this.state.roomIds.map(
+                      (v, i) => (<Option value={v.room_id} key={v.room_id}>{v.channel_name}</Option>)
+                    )
+                  }
               </Select>
             </Suspense>
           <Row
