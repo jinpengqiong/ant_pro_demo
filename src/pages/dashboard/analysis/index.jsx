@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import PageLoading from './components/PageLoading';
 import styles from './style.less';
 import { getTimeDistance } from './utils/utils';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -21,7 +22,6 @@ const CurrentDateData = React.lazy(() => import('./components/CurrentDateData'))
 }))
 class Analysis extends Component {
   state = {
-    rangePickerValue: '',
     timeType: '7days',
     roomId: '',
     allRoomId: '',
@@ -32,14 +32,11 @@ class Analysis extends Component {
     GenderData: null,
     RegionData: null,
     roomIds: null,
-    orgId: '',
   };
 
   reqRef = 0;
 
   timeoutId1= 0;
-  timeoutId2= 0;
-  timeoutId3= 0;
 
 
   async componentDidMount() {
@@ -48,11 +45,9 @@ class Analysis extends Component {
     if (window.plus) {
       const url = window.plus.webView.currentWebview().getUrl()
       orgId = this.getQueryString(url, 'org_Id')
-      this.setState({ orgId })
       await this.getRoomIds(orgId)
     } else if (window) {
       orgId = this.getQueryString(window.location.search, 'org_Id')
-      this.setState({ orgId })
       await this.getRoomIds(orgId)
       // console.log('state123', this.state.roomIds)
     }
@@ -74,13 +69,13 @@ class Analysis extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)) {
-      console.log('nextState', nextState)
-      console.log('state', this.state)
-      // this.setAllIntervals(nextState.roomId)
-    }
-  }
+  // componentWillUpdate(nextProps, nextState) {
+  //   if(parseInt(nextState.roomId) !== parseInt(this.state.roomId)) {
+  //     console.log('nextState', nextState)
+  //     console.log('state', this.state)
+  //     // this.setAllIntervals(nextState.roomId)
+  //   }
+  // }
 
   componentWillUnmount() {
     const { dispatch } = this.props;
@@ -89,14 +84,10 @@ class Analysis extends Component {
     });
     cancelAnimationFrame(this.reqRef);
     clearTimeout(this.timeoutId1);
-    clearTimeout(this.timeoutId2);
-    clearTimeout(this.timeoutId3);
   }
 
   setAllIntervals = ID => {
     clearTimeout(this.timeoutId1);
-    clearTimeout(this.timeoutId2);
-    clearTimeout(this.timeoutId3);
     this.gatTotalCount(ID)
     this.gatGenderData(ID)
     this.gatHoursData(ID)
@@ -105,17 +96,7 @@ class Analysis extends Component {
     this.timeoutId1 = setInterval(
       () => {
         this.gatTotalCount(ID)
-        this.gatGenderData(ID)
       }, 5000)
-    this.timeoutId2 = setInterval(
-      () => {
-        this.gatHoursData(ID)
-        this.gatRegionData(ID)
-      }, 3600000)
-    this.timeoutId3 = setInterval(
-      () => {
-        this.gatDayData(ID)
-      }, 86400000)
   }
 
   getQueryString = (url, name) => {
@@ -266,7 +247,6 @@ class Analysis extends Component {
 
   handleRangePickerChange = rangePickerValue => {
     console.log('rangePickerValue', rangePickerValue)
-    clearTimeout(this.timeoutId3);
     if (JSON.stringify(rangePickerValue) === '[]') {
       this.setState({ rangePickerValue: [] });
       return
@@ -332,6 +312,7 @@ class Analysis extends Component {
                   <RangePicker
                   onChange={this.handleRangePickerChange}
                   dropdownClassName={styles.thePicker}
+                  locale={locale}
                   />
                 }
               </div>

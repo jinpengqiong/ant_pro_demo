@@ -76,7 +76,7 @@ export default {
   },
   hash: true,
   history: 'hash',
-  publicPath: "/muzhiyun/",
+  publicPath: "/szb/",
   targets: {
     ie: 11,
   },
