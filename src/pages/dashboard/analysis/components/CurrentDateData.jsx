@@ -5,9 +5,7 @@ import styles from './_currentDateData.less';
 import {isVoidObject} from '../utils/utils'
 
 
-const CurrentDateData = ({ loading, totalCount, genderData }) => {
-  console.log('genderData', genderData)
-  return (
+const CurrentDateData = ({ loading, totalCount, genderData }) => (
   <Card
     loading={loading}
     // className={styles.salesCard}
@@ -68,6 +66,6 @@ const CurrentDateData = ({ loading, totalCount, genderData }) => {
           </div>
       </div>
   </Card>
-)};
+);
 
 export default CurrentDateData;

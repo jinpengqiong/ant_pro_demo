@@ -6,7 +6,7 @@ const CumstomizedBar = ({ loading, customData }) => (
   <Card
     loading={loading}
     bordered={false}
-    title="自定义时间间隔"
+    title="自定义区间（一个月内）"
     style={{
       height: '80%',
     }}

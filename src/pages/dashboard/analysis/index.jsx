@@ -271,11 +271,12 @@ class Analysis extends Component {
       this.setState({ rangePickerValue: [] });
       return
     }
-    const startTime = rangePickerValue[0].unix()
-    const endTime = rangePickerValue[1].unix()
-    console.log('startTime', startTime)
-    console.log('endTime', endTime)
-    this.gatDayData(this.state.roomId, startTime, endTime)
+    const startValue = rangePickerValue[0].unix()
+    const endValue = rangePickerValue[1].unix()
+    // console.log('startTime', startValue.daysInMonth())
+    // console.log('endTime', endValue.daysInMonth())
+    // console.log('endTime', rangePickerValue[0].add(1, 'M').isAfter(rangePickerValue[1]))
+    this.gatDayData(this.state.roomId, startValue, endValue)
   };
 
   render() {
