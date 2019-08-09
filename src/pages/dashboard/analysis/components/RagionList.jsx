@@ -2,12 +2,6 @@ import { Card, Table } from 'antd';
 import React from 'react';
 
 const columns = [
-  // {
-  //   title: '排名',
-  //   dataIndex: 'rank',
-  //   key: 'rank',
-  //   render: text => <div style={{width: '5px', borderRadius: '50%' }}></div>,
-  // },
   {
     title: '省份',
     dataIndex: 'province',
@@ -50,7 +44,8 @@ const RagionList = ({ loading, RegionData }) => (
       dataSource={RegionData && !RegionData.error_code ? RegionData : null}
       pagination={false}
       size="small"
-      rowKey={record => record.userCount}/>
+      // rowKey={record => record.userCount}
+      />
   </Card>
 );
 

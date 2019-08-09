@@ -1,6 +1,25 @@
 import { Card } from 'antd';
 import React from 'react';
-import { MiniArea } from './Charts';
+import {
+  G2,
+  Chart,
+  Geom,
+  Axis,
+  Tooltip,
+  Coord,
+  Label,
+  Legend,
+  View,
+  Guide,
+  Shape,
+  Facet,
+  Util
+} from "bizcharts";
+const cols = {
+  x: {
+    range: [ 0, 1 ]
+  }
+}
 
 const CumstomizedBar = ({ loading, customData }) => (
   <Card
@@ -11,12 +30,36 @@ const CumstomizedBar = ({ loading, customData }) => (
       height: '80%',
     }}
   >
-    <h3>用户数</h3>
-    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data1 : null } />
-    <h3>消息数</h3>
-    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data2 : null } />
-    <h3>点赞数</h3>
-    <MiniArea line color="#cceafe" height={45} data={customData && !customData.error_code ? customData.data3 : null } />
+    <div>
+        <Chart height={400} data={customData} scale={cols} forceFit>
+          <Legend />
+          <Axis name="x"/>
+          <Axis name="y"/>
+          <Tooltip
+            crosshairs={{
+              type: "y"
+            }}
+          />
+          <Geom
+            type="line"
+            position="x*y"
+            size={2}
+            color={"s"}
+            shape={"smooth"}
+          />
+          <Geom
+            type="point"
+            position="x*y"
+            size={4}
+            shape={"circle"}
+            color={"s"}
+            style={{
+              stroke: "#fff",
+              lineWidth: 1
+            }}
+          />
+        </Chart>
+      </div>
   </Card>
 );
 

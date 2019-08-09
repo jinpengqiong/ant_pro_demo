@@ -1,4 +1,5 @@
 import { Col, Row, Select, DatePicker, Radio } from 'antd';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 import React, { Component, Suspense } from 'react';
 import { GridContent } from '@ant-design/pro-layout';
 import { FormattedMessage } from 'umi-plugin-react/locale';
@@ -6,7 +7,7 @@ import { connect } from 'dva';
 import PageLoading from './components/PageLoading';
 import styles from './style.less';
 import { getTimeDistance } from './utils/utils';
-import locale from 'antd/es/date-picker/locale/zh_CN';
+
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -57,7 +58,7 @@ class Analysis extends Component {
           roomId.push((item.room_id + 1982) * 168)
         }
       )
-      console.log('roomId', roomId.join(','))
+      // console.log('roomId', roomId.join(','))
       this.setState({ roomId: roomId.join(','), allRoomId: roomId.join(',')})
       this.setAllIntervals(roomId)
     }
@@ -124,7 +125,7 @@ class Analysis extends Component {
   gatHoursData = roomId => {
     const tsStart = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
     const tsEnd = parseInt((new Date().getTime())/1000)
-    const url = `http://ai.muzhiyun.cn/api/v1/room/listHour?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
+    const url = `http://ai.muzhiyun.cn/api/v1/room/dayData?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
     fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -132,27 +133,27 @@ class Analysis extends Component {
     .then(response => response.json())
     .then(responseJson => {
       if (!responseJson.error_code) {
-        const arr1 = []
-        const arr2 = []
-        const arr3 = []
-        responseJson.response.forEach(
-          (item, i) => {
-            arr1.push({ x: item.x, y: item.y1 })
-            arr2.push({ x: item.x, y: item.y2 })
-            arr3.push({ x: item.x, y: item.y3 })
-          },
-      )
-      this.setState({ HoursData: { data1: arr1, data2: arr2, data3: arr3 } })
+        responseJson.forEach(
+          item => {
+            if(item.s === '1'){
+              item.s = '用户数'
+            }
+            if(item.s === '2'){
+              item.s = '消息数'
+            }
+            if(item.s === '3'){
+              item.s = '点赞数'
+            }
+            item.x = item.x.split(' ')[1]
+          }
+        )
+      this.setState({ HoursData: responseJson })
       }
     }).catch(err => console.log(err))
   }
 
-  gatDayData = (
-                roomId,
-                tsStart = parseInt((new Date(new Date(new Date().getTime() - 7*24*60*60*1000).toLocaleDateString()).getTime())/1000),
-                tsEnd = parseInt((new Date(new Date().toLocaleDateString()).getTime())/1000)
-                ) => {
-    const url = `http://ai.muzhiyun.cn/api/v1/room/listDay?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
+  gatDayData = roomId  => {
+    const url = `http://ai.muzhiyun.cn/api/v1/room/weekData?room_id=${roomId}`
     fetch(url, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -160,25 +161,52 @@ class Analysis extends Component {
     .then(response => response.json())
     .then(responseJson => {
       if (!responseJson.error_code) {
-        const arr1 = []
-        const arr2 = []
-        const arr3 = []
-        responseJson.response.forEach(
-          (item, i) => {
-            arr1.push({ x: item.x, y: item.y1 })
-            arr2.push({ x: item.x, y: item.y2 })
-            arr3.push({ x: item.x, y: item.y3 })
-          },
+        responseJson.forEach(
+          item => {
+            if(item.s === '1'){
+              item.s = '用户数'
+            }
+            if(item.s === '2'){
+              item.s = '消息数'
+            }
+            if(item.s === '3'){
+              item.s = '点赞数'
+            }
+          }
         )
-        if (this.state.timeType === 'customized') {
-          // console.log('aaaa', { data1: arr1, data2: arr2, data3: arr3 })
-          this.setState({ customData: { data1: arr1, data2: arr2, data3: arr3 } })
-        } else {
-          this.setState({ DayData: { data1: arr1, data2: arr2, data3: arr3 } })
-        }
+        this.setState({ DayData: responseJson })
       }
     }).catch(err => console.log(err))
   }
+
+  getCumstomDate = ( roomId, tsStart, tsEnd ) => {
+    const url = `http://ai.muzhiyun.cn/api/v1/room/listDay2?room_id=${roomId}&tsStart=${tsStart}&tsEnd=${tsEnd}`
+    fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(responseJson => {
+      if (!responseJson.error_code) {
+        responseJson.forEach(
+          item => {
+            if(item.s === '1'){
+              item.s = '用户数'
+            }
+            if(item.s === '2'){
+              item.s = '消息数'
+            }
+            if(item.s === '3'){
+              item.s = '点赞数'
+            }
+          }
+        )
+        this.setState({ customData: responseJson })
+      }
+    }).catch(err => console.log(err))
+  }
+
+
 
   gatGenderData = roomId => {
     const url = `http://ai.muzhiyun.cn/api/v1/room/genderData?room_id=${roomId}`
@@ -189,7 +217,7 @@ class Analysis extends Component {
     .then(response => response.json())
     .then(responseJson => {
       // console.log('responseJson', responseJson)
-      this.setState({ GenderData: responseJson.response })
+      this.setState({ GenderData: responseJson })
     }).catch(err => console.log(err))
   }
 
@@ -201,6 +229,11 @@ class Analysis extends Component {
     })
     .then(response => response.json())
     .then(responseJson => {
+      responseJson.forEach(
+        (v,i) => {
+          v.key = i
+        }
+      )
       // console.log('RegionData', responseJson)
       this.setState({ RegionData: responseJson })
     }).catch(err => console.log(err))
@@ -216,7 +249,7 @@ class Analysis extends Component {
     })
     .then(response => response.json())
     .then(responseJson => {
-      console.log('getRoomIds', responseJson)
+      // console.log('getRoomIds', responseJson)
       this.setState({ roomIds: responseJson.response })
     }).catch(err => console.log(err))
   }
@@ -246,22 +279,20 @@ class Analysis extends Component {
   }
 
   handleRangePickerChange = rangePickerValue => {
-    console.log('rangePickerValue', rangePickerValue)
+    // console.log('rangePickerValue', rangePickerValue)
     if (JSON.stringify(rangePickerValue) === '[]') {
       this.setState({ rangePickerValue: [] });
       return
     }
     const startValue = rangePickerValue[0].unix()
     const endValue = rangePickerValue[1].unix()
-    // console.log('startTime', startValue.daysInMonth())
-    // console.log('endTime', endValue.daysInMonth())
-    // console.log('endTime', rangePickerValue[0].add(1, 'M').isAfter(rangePickerValue[1]))
-    this.gatDayData(this.state.roomId, startValue, endValue)
+    this.getCumstomDate(this.state.roomId, startValue, endValue)
   };
 
   render() {
     const { loading } = this.props;
     const { totalCount, GenderData, HoursData, DayData, RegionData, customData, timeType, roomId, allRoomId } = this.state;
+    // console.log('allRoomId', allRoomId)
     return (
       <GridContent>
         <React.Fragment>
@@ -272,12 +303,12 @@ class Analysis extends Component {
                 style={{ width: 200 }}
                 defaultValue={allRoomId}
                 onChange={this.handleSelectChange}>
-                  <Option value={allRoomId} key={allRoomId}>所有直播间</Option>
+                  <Option value={allRoomId} key={-1}>所有直播间</Option>
                   {
                     this.state.roomIds
                     &&
                     this.state.roomIds.map(
-                      (v, i) => (<Option value={(v.room_id + 1982) * 168} key={(v.room_id + 1982) * 168}>{v.channel_name}</Option>)
+                      (v, i) => (<Option value={(v.room_id + 1982) * 168} key={v.room_id}>{v.channel_name}</Option>)
                     )
                   }
               </Select>

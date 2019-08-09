@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import React from 'react';
 import { Pie } from './Charts';
 import styles from './_currentDateData.less';
-import {isVoidObject} from '../utils/utils'
+import { isVoidObject } from '../utils/utils'
 
 
 const CurrentDateData = ({ loading, totalCount, genderData }) => (
