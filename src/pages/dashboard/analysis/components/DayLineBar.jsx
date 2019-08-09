@@ -34,7 +34,10 @@ const HourLineBar = ({ loading, DayData }) => (
     <div>
         <Chart height={400} data={DayData} scale={cols} forceFit>
           <Legend />
-          <Axis name="x"/>
+          <Axis name="x" 
+          label={{
+            formatter: val => ''
+          }}/>
           <Axis name="y"/>
           <Tooltip
             crosshairs={{

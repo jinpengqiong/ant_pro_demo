@@ -33,7 +33,10 @@ const CumstomizedBar = ({ loading, customData }) => (
     <div>
         <Chart height={400} data={customData} scale={cols} forceFit>
           <Legend />
-          <Axis name="x"/>
+          <Axis name="x" 
+          label={{
+              formatter: val => ''
+            }}/>
           <Axis name="y"/>
           <Tooltip
             crosshairs={{
